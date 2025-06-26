@@ -1,46 +1,202 @@
-# Getting Started with Create React App
+# MUST E-Portal - React + Firebase
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern admission portal for Malawi University of Science and Technology built with React and Firebase.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+- **Modern UI/UX**: Beautiful, responsive design with smooth animations
+- **User Authentication**: Secure login/signup with Firebase Auth
+- **Application Management**: Multi-step application form with progress tracking
+- **Dashboard**: Real-time application status tracking
+- **Document Upload**: Secure file storage with Firebase Storage
+- **Real-time Updates**: Live status updates with Firestore
+- **Mobile Responsive**: Works perfectly on all devices
 
-### `npm start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Frontend**: React 18 + TypeScript
+- **Styling**: CSS3 with modern design system
+- **Backend**: Firebase (Firestore, Authentication, Storage)
+- **Routing**: React Router v6
+- **Icons**: Font Awesome 6
+- **Deployment**: Firebase Hosting
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📋 Prerequisites
 
-### `npm test`
+- Node.js (v16 or higher)
+- npm or yarn
+- Firebase account
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🔧 Installation & Setup
 
-### `npm run build`
+### 1. Clone and Install Dependencies
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd must-e-portal
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 2. Firebase Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Create Firebase Project**:
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Click "Add project"
+   - Name your project (e.g., "must-e-portal")
+   - Follow the setup wizard
 
-### `npm run eject`
+2. **Enable Services**:
+   - **Authentication**: Go to Authentication > Sign-in method
+   - Enable Email/Password authentication
+   - **Firestore**: Go to Firestore Database > Create database
+   - Start in test mode (we'll add security rules later)
+   - **Storage**: Go to Storage > Get started
+   - Start in test mode
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. **Get Configuration**:
+   - Go to Project Settings (gear icon)
+   - Scroll down to "Your apps"
+   - Click the web icon (</>)
+   - Register your app
+   - Copy the config object
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. **Update Firebase Config**:
+   - Open `src/firebase/config.ts`
+   - Replace the placeholder values with your actual Firebase config:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```typescript
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-project-id.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project-id.appspot.com",
+  messagingSenderId: "your-sender-id",
+  appId: "your-app-id"
+};
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### 3. Start Development Server
 
-## Learn More
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The app will open at `http://localhost:3000`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📁 Project Structure
+
+```
+src/
+├── components/          # Reusable components
+│   └── Header/         # Navigation header
+├── pages/              # Page components
+│   └── Home/           # Home page
+├── firebase/           # Firebase configuration
+│   └── config.ts       # Firebase setup
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions
+├── hooks/              # Custom React hooks
+└── styles/             # Global styles
+```
+
+## 🔐 Authentication Flow
+
+1. **Sign Up**: Users create accounts with email/password
+2. **Login**: Secure authentication with Firebase Auth
+3. **Protected Routes**: Dashboard and application pages require authentication
+4. **Session Management**: Automatic login state persistence
+
+## 📝 Application Process
+
+1. **Account Creation**: User registers with email/password
+2. **Program Selection**: Choose from Postgraduate, ODL, or Weekend programs
+3. **Personal Information**: Fill in personal and contact details
+4. **Educational Background**: Provide academic qualifications
+5. **Document Upload**: Submit required documents
+6. **Review & Submit**: Final review and submission
+7. **Status Tracking**: Monitor application progress in dashboard
+
+## 🎨 Design System
+
+- **Primary Color**: #003366 (Navy Blue)
+- **Secondary Color**: #4CAF50 (Green)
+- **Accent Color**: #FF9800 (Orange)
+- **Typography**: Segoe UI, Tahoma, Geneva, Verdana, sans-serif
+- **Shadows**: Subtle elevation with CSS box-shadow
+- **Transitions**: Smooth 0.3s ease transitions
+
+## 🚀 Deployment
+
+### Firebase Hosting
+
+1. **Install Firebase CLI**:
+```bash
+npm install -g firebase-tools
+```
+
+2. **Login to Firebase**:
+```bash
+firebase login
+```
+
+3. **Initialize Firebase Hosting**:
+```bash
+firebase init hosting
+```
+
+4. **Build and Deploy**:
+```bash
+npm run build
+firebase deploy
+```
+
+## 🔧 Development Commands
+
+```bash
+npm start          # Start development server
+npm run build      # Build for production
+npm test           # Run tests
+npm run eject      # Eject from Create React App (not recommended)
+```
+
+## 📱 Responsive Design
+
+The application is fully responsive and optimized for:
+- Desktop (1200px+)
+- Tablet (768px - 1199px)
+- Mobile (320px - 767px)
+
+## 🔒 Security Considerations
+
+- Firebase Security Rules for Firestore and Storage
+- Input validation and sanitization
+- Protected routes with authentication
+- Secure file upload with type validation
+- Environment variables for sensitive data
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For support and questions:
+- Create an issue in the repository
+- Contact the development team
+- Check the Firebase documentation
+
+## 🗺️ Roadmap
+
+- [ ] Admin dashboard for application management
+- [ ] Email notifications
+- [ ] Payment integration
+- [ ] Advanced analytics
+- [ ] Multi-language support
+- [ ] Progressive Web App (PWA) features
