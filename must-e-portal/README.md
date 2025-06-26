@@ -200,3 +200,10 @@ For support and questions:
 - [ ] Advanced analytics
 - [ ] Multi-language support
 - [ ] Progressive Web App (PWA) features
+
+## 🔧 Firebase Admin SDK
+
+### Example: Set admin claim for a user
+```js
+admin.auth().setCustomUserClaims(uid, { admin: true });
+```

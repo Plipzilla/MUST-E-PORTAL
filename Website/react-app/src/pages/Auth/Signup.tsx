@@ -1,8 +1,31 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import './Auth.css';
+
+// Helper to map Firebase errors to user-friendly messages for signup
+const getSignupFriendlyError = (error: any, context: 'form' | 'google' | 'facebook') => {
+  if (!error || !error.code) return 'Something went wrong. Please try again.';
+  switch (error.code) {
+    case 'auth/email-already-in-use':
+      return 'An account already exists with this email.';
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.';
+    case 'auth/weak-password':
+      return 'Password is too weak. Please use at least 6 characters.';
+    case 'auth/popup-closed-by-user':
+      return `The ${context === 'google' ? 'Google' : context === 'facebook' ? 'Facebook' : 'social'} sign up was cancelled.`;
+    case 'auth/account-exists-with-different-credential':
+      return 'An account already exists with this email using a different sign-up method.';
+    case 'auth/too-many-requests':
+      return 'Too many attempts. Please try again later.';
+    case 'auth/popup-blocked':
+      return 'Popup was blocked. Please allow popups and try again.';
+    default:
+      return 'Something went wrong. Please try again.';
+  }
+};
 
 const Signup: React.FC = () => {
   const [name, setName] = useState('');
@@ -10,17 +33,20 @@ const Signup: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingButton, setLoadingButton] = useState<'form' | 'google' | 'facebook' | null>(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setLoadingButton('form');
     setError('');
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
+      setLoadingButton(null);
       return;
     }
 
@@ -43,9 +69,58 @@ const Signup: React.FC = () => {
       // Redirect to dashboard
       navigate('/dashboard');
     } catch (error: any) {
-      setError(error.message || 'Failed to create account');
+      setError(getSignupFriendlyError(error, 'form'));
     } finally {
       setLoading(false);
+      setLoadingButton(null);
+    }
+  };
+
+  // Google sign up handler
+  const handleGoogleSignup = async () => {
+    setLoading(true);
+    setLoadingButton('google');
+    setError('');
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      // Store user info in localStorage
+      localStorage.setItem('currentUser', JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName || user.email
+      }));
+      navigate('/dashboard');
+    } catch (error: any) {
+      setError(getSignupFriendlyError(error, 'google'));
+    } finally {
+      setLoading(false);
+      setLoadingButton(null);
+    }
+  };
+
+  // Facebook sign up handler
+  const handleFacebookSignup = async () => {
+    setLoading(true);
+    setLoadingButton('facebook');
+    setError('');
+    try {
+      const provider = new FacebookAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      // Store user info in localStorage
+      localStorage.setItem('currentUser', JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName || user.email
+      }));
+      navigate('/dashboard');
+    } catch (error: any) {
+      setError(getSignupFriendlyError(error, 'facebook'));
+    } finally {
+      setLoading(false);
+      setLoadingButton(null);
     }
   };
 
@@ -143,13 +218,13 @@ const Signup: React.FC = () => {
               </div>
               
               <div className="social-login">
-                <button className="social-btn google">
+                <button className="social-btn google" onClick={handleGoogleSignup} disabled={loading && loadingButton !== 'google' ? true : loading}>
                   <i className="fab fa-google"></i>
-                  Sign up with Google
+                  {loading && loadingButton === 'google' ? 'Creating Account...' : 'Continue with Google'}
                 </button>
-                <button className="social-btn facebook">
+                <button className="social-btn facebook" onClick={handleFacebookSignup} disabled={loading && loadingButton !== 'facebook' ? true : loading}>
                   <i className="fab fa-facebook-f"></i>
-                  Sign up with Facebook
+                  {loading && loadingButton === 'facebook' ? 'Creating Account...' : 'Continue with Facebook'}
                 </button>
               </div>
               

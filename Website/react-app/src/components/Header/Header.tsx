@@ -1,14 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import { useAuth } from '../../firebase/AuthContext';
 
-interface HeaderProps {
-  isLoggedIn: boolean;
-  onLogout: () => void;
-  userName?: string;
-}
+const Header: React.FC = () => {
+  const { user, isLoading, logout } = useAuth();
 
-const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout, userName }) => {
+  if (isLoading) {
+    return (
+      <header className="header">
+        <div className="container header-container">
+          <div className="logo">
+            <i className="fas fa-graduation-cap"></i>
+            <h1>MUST E-Admission</h1>
+          </div>
+          <div className="header-loading">Loading...</div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="header">
       <div className="container header-container">
@@ -21,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout, userName }) => {
           <ul>
             <li><Link to="/" className="nav-link">Home</Link></li>
             <li><Link to="/programs" className="nav-link">Programs</Link></li>
-            {isLoggedIn && (
+            {user && (
               <>
                 <li><Link to="/application" className="nav-link">Application</Link></li>
                 <li><Link to="/dashboard" className="nav-link">Dashboard</Link></li>
@@ -32,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout, userName }) => {
         </nav>
         
         <div className="auth-buttons">
-          {!isLoggedIn ? (
+          {!user ? (
             <>
               <Link to="/login" className="btn btn-login">
                 <i className="fas fa-sign-in-alt"></i> Log in
@@ -42,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout, userName }) => {
               </Link>
             </>
           ) : (
-            <button onClick={onLogout} className="btn btn-login">
+            <button onClick={logout} className="btn btn-login">
               <i className="fas fa-sign-out-alt"></i> Logout
             </button>
           )}
