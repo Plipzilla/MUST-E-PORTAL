@@ -1,0 +1,136 @@
+/* Header Styles */
+.header {
+  background-color: #003366;
+  color: white;
+  padding: 15px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.logo i {
+  font-size: 28px;
+}
+
+.logo h1 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Navigation */
+nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 20px;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+  min-width: 600px;
+  justify-content: center;
+}
+
+nav li {
+  position: relative;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 5px;
+  border-bottom: 2px solid transparent;
+  display: block;
+  white-space: nowrap;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #FF9800;
+  border-bottom: 2px solid #FF9800;
+}
+
+/* Auth Buttons */
+.auth-buttons {
+  display: flex;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 8px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+}
+
+.btn-login {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+.btn-signup {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-login:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-signup:hover {
+  background-color: #3d8b40;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  nav {
+    margin: 0;
+  }
+  
+  nav ul {
+    min-width: auto;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .auth-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+} 
