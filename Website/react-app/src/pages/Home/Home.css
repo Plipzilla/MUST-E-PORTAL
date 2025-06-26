@@ -85,6 +85,7 @@ body {
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 32px;
 }
 
 .btn {
@@ -302,7 +303,7 @@ body {
 }
 
 .program-header {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, #003366, #1976d2);
   color: white;
   padding: 25px;
   display: flex;
@@ -351,7 +352,7 @@ body {
 
 .btn-program {
   display: inline-block;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, #003366, #1976d2);
   color: white;
   padding: 12px 30px;
   border-radius: 6px;

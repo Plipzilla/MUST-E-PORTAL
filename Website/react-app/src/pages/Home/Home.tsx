@@ -155,6 +155,23 @@ const Home: React.FC = () => {
                 <Link to="/signup" className="btn-program">Apply Now</Link>
               </div>
             </div>
+
+            {/* New Undergraduate (Self-Paying) Card */}
+            <div className="program-card">
+              <div className="program-header">
+                <h3>Undergraduate (Self-Paying)</h3>
+                <div className="price">MK8,000</div>
+              </div>
+              <div className="program-body">
+                <ul>
+                  <li><i className="fas fa-check-circle"></i> Bachelor's Degree Programs</li>
+                  <li><i className="fas fa-check-circle"></i> Flexible Payment Options</li>
+                  <li><i className="fas fa-check-circle"></i> Modern Campus Facilities</li>
+                  <li><i className="fas fa-check-circle"></i> Student Support Services</li>
+                </ul>
+                <Link to="/signup" className="btn-program">Apply Now</Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

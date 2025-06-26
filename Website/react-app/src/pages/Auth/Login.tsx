@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import './Auth.css';
 
@@ -31,6 +31,27 @@ const Login: React.FC = () => {
       navigate('/dashboard');
     } catch (error: any) {
       setError(error.message || 'Failed to login');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError('');
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      localStorage.setItem('currentUser', JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName || user.email?.split('@')[0],
+        photoURL: user.photoURL
+      }));
+      navigate('/dashboard');
+    } catch (error: any) {
+      setError(error.message || 'Google sign-in failed');
     } finally {
       setLoading(false);
     }
@@ -106,9 +127,9 @@ const Login: React.FC = () => {
               </div>
               
               <div className="social-login">
-                <button className="social-btn google">
+                <button type="button" className="social-btn google" onClick={handleGoogleSignIn} disabled={loading}>
                   <i className="fab fa-google"></i>
-                  Continue with Google
+                  {loading ? 'Signing in...' : 'Continue with Google'}
                 </button>
                 <button className="social-btn facebook">
                   <i className="fab fa-facebook-f"></i>

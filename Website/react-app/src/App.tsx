@@ -5,6 +5,7 @@ import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Contact from './pages/Contact/Contact';
 import './App.css';
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/application" element={<div>Application Form - Coming Soon</div>} />
-          <Route path="/contact" element={<div>Contact Page - Coming Soon</div>} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/programs" element={<div>Programs Page - Coming Soon</div>} />
         </Routes>
       </div>
