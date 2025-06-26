@@ -5,7 +5,7 @@ import { auth } from './config';
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  logout: () => Promise<void>;
+  logout: (navigate?: (path: string) => void) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -37,10 +37,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  const logout = async () => {
+  const logout = async (navigate?: (path: string) => void) => {
     await signOut(auth);
     setUser(null);
     localStorage.removeItem('currentUser');
+    if (navigate) navigate('/');
   };
 
   return (

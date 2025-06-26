@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useAuth } from '../../firebase/AuthContext';
 import { useUserClaims } from '../../firebase/useUserClaims';
@@ -7,6 +7,7 @@ import { useUserClaims } from '../../firebase/useUserClaims';
 const Header: React.FC = () => {
   const { user, isLoading, logout } = useAuth();
   const { admin, reviewer, loading: claimsLoading } = useUserClaims();
+  const navigate = useNavigate();
 
   if (isLoading || claimsLoading) {
     return (
@@ -36,10 +37,15 @@ const Header: React.FC = () => {
             <li><Link to="/programs" className="nav-link">Programs</Link></li>
             {user && (
               <>
-                <li><Link to="/application" className="nav-link">Application</Link></li>
-                <li><Link to="/dashboard" className="nav-link">Dashboard</Link></li>
-                {admin && <li><Link to="/admin" className="nav-link">Admin Panel</Link></li>}
-                {reviewer && <li><Link to="/reviewer" className="nav-link">Reviewer Dashboard</Link></li>}
+                {admin ? (
+                  <li><Link to="/admin" className="nav-link">Admin Panel</Link></li>
+                ) : (
+                  <>
+                    <li><Link to="/application" className="nav-link">Application</Link></li>
+                    <li><Link to="/dashboard" className="nav-link">Dashboard</Link></li>
+                    {reviewer && <li><Link to="/reviewer" className="nav-link">Reviewer Dashboard</Link></li>}
+                  </>
+                )}
               </>
             )}
             <li><Link to="/contact" className="nav-link">Contact</Link></li>
@@ -57,7 +63,7 @@ const Header: React.FC = () => {
               </Link>
             </>
           ) : (
-            <button onClick={logout} className="btn btn-login">
+            <button onClick={() => logout(navigate)} className="btn btn-login">
               <i className="fas fa-sign-out-alt"></i> Logout
             </button>
           )}

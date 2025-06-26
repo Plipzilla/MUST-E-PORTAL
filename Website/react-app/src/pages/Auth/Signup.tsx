@@ -66,8 +66,13 @@ const Signup: React.FC = () => {
         name: name
       }));
 
-      // Redirect to dashboard
-      navigate('/dashboard');
+      // Check for admin claim
+      const tokenResult = await user.getIdTokenResult();
+      if (tokenResult.claims.admin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'form'));
     } finally {
@@ -91,7 +96,12 @@ const Signup: React.FC = () => {
         email: user.email,
         name: user.displayName || user.email
       }));
-      navigate('/dashboard');
+      const tokenResult = await user.getIdTokenResult();
+      if (tokenResult.claims.admin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'google'));
     } finally {
@@ -115,7 +125,12 @@ const Signup: React.FC = () => {
         email: user.email,
         name: user.displayName || user.email
       }));
-      navigate('/dashboard');
+      const tokenResult = await user.getIdTokenResult();
+      if (tokenResult.claims.admin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'facebook'));
     } finally {

@@ -44,16 +44,18 @@ const Login: React.FC = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      
-      // Store user info in localStorage (you can replace this with better state management)
       localStorage.setItem('currentUser', JSON.stringify({
         uid: user.uid,
         email: user.email,
         name: user.displayName || user.email?.split('@')[0]
       }));
-
-      // Redirect to dashboard
-      navigate('/dashboard');
+      // Check for admin claim
+      const tokenResult = await user.getIdTokenResult();
+      if (tokenResult.claims.admin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       setError(getFriendlyError(error, 'form'));
     } finally {
@@ -76,7 +78,12 @@ const Login: React.FC = () => {
         name: user.displayName || user.email?.split('@')[0],
         photoURL: user.photoURL
       }));
-      navigate('/dashboard');
+      const tokenResult = await user.getIdTokenResult();
+      if (tokenResult.claims.admin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       setError(getFriendlyError(error, 'google'));
     } finally {
@@ -99,7 +106,12 @@ const Login: React.FC = () => {
         name: user.displayName || user.email?.split('@')[0],
         photoURL: user.photoURL
       }));
-      navigate('/dashboard');
+      const tokenResult = await user.getIdTokenResult();
+      if (tokenResult.claims.admin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       setError(getFriendlyError(error, 'facebook'));
     } finally {
