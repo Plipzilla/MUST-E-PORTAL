@@ -103,8 +103,9 @@ body {
 }
 
 .btn-primary {
-  background-color: var(--secondary);
+  background: linear-gradient(90deg, #6fcf4b 0%, #a3d977 100%);
   color: white;
+  border: none;
 }
 
 .btn-secondary {
@@ -114,8 +115,9 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: #3d8b40;
+  background: linear-gradient(90deg, #7ed957 0%, #b6e388 100%);
   transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(126, 217, 87, 0.10);
 }
 
 .btn-secondary:hover {
