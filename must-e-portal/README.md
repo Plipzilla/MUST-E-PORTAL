@@ -207,3 +207,10 @@ For support and questions:
 ```js
 admin.auth().setCustomUserClaims(uid, { admin: true });
 ```
+
+## 🔧 Additional Installation
+
+### Install Firebase Admin SDK
+```bash
+npm install firebase-admin
+```
