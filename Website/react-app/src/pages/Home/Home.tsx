@@ -1,0 +1,165 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Home.css';
+
+const Home: React.FC = () => {
+  return (
+    <main className="page-content">
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="container hero-content">
+          <h1>Your Future Starts Here at MUST</h1>
+          <p>Apply to Malawi University of Science and Technology through our streamlined online admission portal designed for postgraduate, ODL, weekend, and economic students</p>
+          <div className="hero-btns">
+            <Link to="/signup" className="btn btn-primary">
+              <i className="fas fa-rocket"></i> Start Your Application
+            </Link>
+            <Link to="/dashboard" className="btn btn-secondary">
+              <i className="fas fa-user-graduate"></i> Check Admission Status
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="features">
+        <div className="container">
+          <div className="section-title">
+            <h2>Why Choose Our Portal</h2>
+            <p>Experience a seamless admission process designed for modern students</p>
+          </div>
+          
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="fas fa-clock"></i>
+              </div>
+              <h3>Time-Saving Process</h3>
+              <p>Complete your application in minutes without paperwork or travel</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="fas fa-mobile-alt"></i>
+              </div>
+              <h3>Mobile-Friendly</h3>
+              <p>Apply from anywhere using your smartphone or tablet</p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">
+                <i className="fas fa-shield-alt"></i>
+              </div>
+              <h3>Secure & Confidential</h3>
+              <p>Your data is protected with bank-level security measures</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Application Steps */}
+      <section className="steps">
+        <div className="container">
+          <div className="section-title">
+            <h2>Simple Application Process</h2>
+            <p>Follow these easy steps to complete your admission</p>
+          </div>
+          
+          <div className="steps-container">
+            <div className="step-card">
+              <div className="step-number">1</div>
+              <h3>Create Account</h3>
+              <p>Register with your email and set a secure password</p>
+            </div>
+            
+            <div className="step-card">
+              <div className="step-number">2</div>
+              <h3>Select Program</h3>
+              <p>Choose from our postgraduate, ODL, or weekend programs</p>
+            </div>
+            
+            <div className="step-card">
+              <div className="step-number">3</div>
+              <h3>Complete Profile</h3>
+              <p>Fill in your personal and academic information</p>
+            </div>
+            
+            <div className="step-card">
+              <div className="step-number">4</div>
+              <h3>Upload Documents</h3>
+              <p>Submit required documents through our secure portal</p>
+            </div>
+            
+            <div className="step-card">
+              <div className="step-number">5</div>
+              <h3>Submit & Track</h3>
+              <p>Review and submit your application, then track its status</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Programs Section */}
+      <section className="programs">
+        <div className="container">
+          <div className="section-title">
+            <h2>Available Programs</h2>
+            <p>Explore our specialized programs designed for diverse learners</p>
+          </div>
+          
+          <div className="programs-grid">
+            <div className="program-card">
+              <div className="program-header">
+                <h3>Postgraduate</h3>
+                <div className="price">MK15,000</div>
+              </div>
+              <div className="program-body">
+                <ul>
+                  <li><i className="fas fa-check-circle"></i> Masters & PhD Programs</li>
+                  <li><i className="fas fa-check-circle"></i> Research Opportunities</li>
+                  <li><i className="fas fa-check-circle"></i> Thesis Supervision</li>
+                  <li><i className="fas fa-check-circle"></i> Flexible Schedules</li>
+                </ul>
+                <Link to="/signup" className="btn-program">Apply Now</Link>
+              </div>
+            </div>
+            
+            <div className="program-card">
+              <div className="program-header">
+                <h3>ODL Programs</h3>
+                <div className="price">MK10,000</div>
+              </div>
+              <div className="program-body">
+                <ul>
+                  <li><i className="fas fa-check-circle"></i> Fully Online Learning</li>
+                  <li><i className="fas fa-check-circle"></i> Self-Paced Courses</li>
+                  <li><i className="fas fa-check-circle"></i> Digital Resources</li>
+                  <li><i className="fas fa-check-circle"></i> Virtual Support</li>
+                </ul>
+                <Link to="/signup" className="btn-program">Apply Now</Link>
+              </div>
+            </div>
+            
+            <div className="program-card">
+              <div className="program-header">
+                <h3>Weekend Programs</h3>
+                <div className="price">MK12,000</div>
+              </div>
+              <div className="program-body">
+                <ul>
+                  <li><i className="fas fa-check-circle"></i> Friday-Sunday Classes</li>
+                  <li><i className="fas fa-check-circle"></i> Working Professionals</li>
+                  <li><i className="fas fa-check-circle"></i> Blended Learning</li>
+                  <li><i className="fas fa-check-circle"></i> Career Advancement</li>
+                </ul>
+                <Link to="/signup" className="btn-program">Apply Now</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default Home; 
