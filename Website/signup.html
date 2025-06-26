@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - MUST E-Admission Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>MUST E-Admission</h1>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Programs</a></li>
+                    <li class="auth-only"><a href="application.html">Application</a></li>
+                    <li class="auth-only"><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-login" id="login-btn"><i class="fas fa-sign-in-alt"></i> Log in</a>
+                <a href="signup.html" class="btn btn-signup" id="signup-btn"><i class="fas fa-user-plus"></i> Sign up</a>
+                <a href="#" class="btn btn-login" id="logout-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Signup Page Content -->
+    <main class="page-content">
+        <section class="auth-section">
+            <div class="container auth-container">
+                <div class="auth-info">
+                    <h2>Start Your Academic Journey</h2>
+                    <p>Join thousands of students applying to MUST through our secure portal</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Streamlined application process</li>
+                        <li><i class="fas fa-check-circle"></i> Save and resume applications later</li>
+                        <li><i class="fas fa-check-circle"></i> Secure document uploads</li>
+                        <li><i class="fas fa-check-circle"></i> Real-time application tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="auth-form">
+                    <h2>Create Your Account</h2>
+                    <p>Set up your account to begin your application</p>
+                    
+                    <div class="social-login">
+                        <button class="social-btn google" type="button">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                        <div class="social-btn facebook" id="facebook-login-container">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </div>
+                    </div>
+                    
+                    <div class="form-separator">
+                        <span>Or continue with email</span>
+                    </div>
+                    
+                    <form id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" class="form-control" placeholder="John Doe" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-email">Email Address</label>
+                            <input type="email" id="signup-email" class="form-control" placeholder="your.email@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-phone">Phone Number</label>
+                            <input type="tel" id="signup-phone" class="form-control" placeholder="+265 123 456 789" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" class="form-control" placeholder="Create a password" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-confirm">Confirm Password</label>
+                            <input type="password" id="signup-confirm" class="form-control" placeholder="Confirm your password" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="remember">
+                                <input type="checkbox" id="terms" required>
+                                <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-auth">Create Account</button>
+                    </form>
+                    
+                    <div class="auth-switch">
+                        <p>Already have an account? <a href="login.html">Log in</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>MUST E-Admission</h3>
+                    <p>The premier online admission portal for postgraduate, ODL, weekend, and economic students at Malawi University of Science and Technology.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Programs</a></li>
+                        <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Programs</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Postgraduate Studies</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Open & Distance Learning</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Weekend Programs</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Economic Programs</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Short Courses</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Application Guide</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Document Requirements</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Payment Methods</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Malawi University of Science and Technology. All rights reserved. | Designed with <i class="fas fa-heart" style="color: #e31b23;"></i> for Malawi's future innovators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

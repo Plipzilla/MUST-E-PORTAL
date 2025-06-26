@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUST E-Admission Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>MUST E-Admission</h1>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="#">Programs</a></li>
+                    <li class="auth-only"><a href="application.html">Application</a></li>
+                    <li class="auth-only"><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-login" id="login-btn"><i class="fas fa-sign-in-alt"></i> Log in</a>
+                <a href="signup.html" class="btn btn-signup" id="signup-btn"><i class="fas fa-user-plus"></i> Sign up</a>
+                <a href="#" class="btn btn-login" id="logout-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Page Content -->
+    <main class="page-content">
+        <section class="hero">
+            <div class="container hero-content">
+                <h1>Your Future Starts Here at MUST</h1>
+                <p>Apply to Malawi University of Science and Technology through our streamlined online admission portal designed for postgraduate, ODL, weekend, and economic students</p>
+                <div class="hero-btns">
+                    <a href="signup.html" class="btn btn-primary"><i class="fas fa-rocket"></i> Start Your Application</a>
+                    <a href="dashboard.html" class="btn btn-secondary"><i class="fas fa-user-graduate"></i> Check Admission Status</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Why Choose Our Portal</h2>
+                    <p>Experience a seamless admission process designed for modern students</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Time-Saving Process</h3>
+                        <p>Complete your application in minutes without paperwork or travel</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile-Friendly</h3>
+                        <p>Apply from anywhere using your smartphone or tablet</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Secure & Confidential</h3>
+                        <p>Your data is protected with bank-level security measures</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Application Steps -->
+        <section class="steps">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Simple Application Process</h2>
+                    <p>Follow these easy steps to complete your admission</p>
+                </div>
+                
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Create Account</h3>
+                        <p>Register with your email and set a secure password</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Select Program</h3>
+                        <p>Choose from our postgraduate, ODL, or weekend programs</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Complete Profile</h3>
+                        <p>Fill in your personal and academic information</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3>Upload Documents</h3>
+                        <p>Submit required documents through our secure portal</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">5</div>
+                        <h3>Submit & Track</h3>
+                        <p>Review and submit your application, then track its status</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Programs Section -->
+        <section class="programs">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Available Programs</h2>
+                    <p>Explore our specialized programs designed for diverse learners</p>
+                </div>
+                
+                <div class="programs-grid">
+                    <div class="program-card">
+                        <div class="program-header">
+                            <h3>Postgraduate</h3>
+                            <div class="price">MK15,000</div>
+                        </div>
+                        <div class="program-body">
+                            <ul>
+                                <li><i class="fas fa-check-circle"></i> Masters & PhD Programs</li>
+                                <li><i class="fas fa-check-circle"></i> Research Opportunities</li>
+                                <li><i class="fas fa-check-circle"></i> Thesis Supervision</li>
+                                <li><i class="fas fa-check-circle"></i> Flexible Schedules</li>
+                            </ul>
+                            <a href="signup.html" class="btn-program">Apply Now</a>
+                        </div>
+                    </div>
+                    
+                    <div class="program-card">
+                        <div class="program-header">
+                            <h3>ODL Programs</h3>
+                            <div class="price">MK10,000</div>
+                        </div>
+                        <div class="program-body">
+                            <ul>
+                                <li><i class="fas fa-check-circle"></i> Fully Online Learning</li>
+                                <li><i class="fas fa-check-circle"></i> Self-Paced Courses</li>
+                                <li><i class="fas fa-check-circle"></i> Digital Resources</li>
+                                <li><i class="fas fa-check-circle"></i> Virtual Support</li>
+                            </ul>
+                            <a href="signup.html" class="btn-program">Apply Now</a>
+                        </div>
+                    </div>
+                    
+                    <div class="program-card">
+                        <div class="program-header">
+                            <h3>Weekend Programs</h3>
+                            <div class="price">MK12,000</div>
+                        </div>
+                        <div class="program-body">
+                            <ul>
+                                <li><i class="fas fa-check-circle"></i> Friday-Sunday Classes</li>
+                                <li><i class="fas fa-check-circle"></i> Working Professionals</li>
+                                <li><i class="fas fa-check-circle"></i> Blended Learning</li>
+                                <li><i class="fas fa-check-circle"></i> Career Advancement</li>
+                            </ul>
+                            <a href="signup.html" class="btn-program">Apply Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="testimonials">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Success Stories</h2>
+                    <p>What our students say about the admission process</p>
+                </div>
+                
+                <div class="testimonial-container">
+                    <div class="testimonial">
+                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Student">
+                        <p>"The online admission portal made applying for my postgraduate studies incredibly simple. I completed my application in under 30 minutes and received updates every step of the way."</p>
+                        <h4>Grace Banda</h4>
+                        <div class="role">MSc in Computer Science</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>MUST E-Admission</h3>
+                    <p>The premier online admission portal for postgraduate, ODL, weekend, and economic students at Malawi University of Science and Technology.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Programs</a></li>
+                        <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Programs</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Postgraduate Studies</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Open & Distance Learning</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Weekend Programs</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Economic Programs</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Short Courses</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Application Guide</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Document Requirements</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Payment Methods</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Malawi University of Science and Technology. All rights reserved. | Designed with <i class="fas fa-heart" style="color: #e31b23;"></i> for Malawi's future innovators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
