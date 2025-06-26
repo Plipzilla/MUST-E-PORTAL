@@ -10,6 +10,9 @@ import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './firebase/AuthContext';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import { useUserClaims } from './firebase/useUserClaims';
+import PersonalInfo from './pages/Application/PersonalInfo';
+import { ApplicationProvider } from './pages/Application/ApplicationContext';
+import ApplicationForm from './pages/Application/ApplicationForm';
 import './App.css';
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
@@ -32,7 +35,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
             </Route>
             <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-            <Route path="/application" element={<div>Application Form - Coming Soon</div>} />
+            <Route path="/application" element={<ApplicationForm />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/programs" element={<div>Programs Page - Coming Soon</div>} />
           </Routes>

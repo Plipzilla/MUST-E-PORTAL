@@ -1,8 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
+import { useAuth } from '../../firebase/AuthContext';
+import { useUserClaims } from '../../firebase/useUserClaims';
 
 const Home: React.FC = () => {
+  const { user } = useAuth();
+  const { admin, reviewer } = useUserClaims();
+  const applyNowTarget = user && !admin && !reviewer ? '/application' : '/signup';
+
   return (
     <main className="page-content">
       {/* Hero Section */}
@@ -11,7 +17,7 @@ const Home: React.FC = () => {
           <h1>Your Future Starts Here at MUST</h1>
           <p>Apply to Malawi University of Science and Technology through our streamlined online admission portal designed for postgraduate, ODL, weekend, and economic students</p>
           <div className="hero-btns">
-            <Link to="/signup" className="btn btn-primary">
+            <Link to="/signup" className="btn home-btn-primary">
               <i className="fas fa-rocket"></i> Start Your Application
             </Link>
             <Link to="/dashboard" className="btn btn-secondary">
@@ -120,7 +126,7 @@ const Home: React.FC = () => {
                   <li><i className="fas fa-check-circle"></i> Thesis Supervision</li>
                   <li><i className="fas fa-check-circle"></i> Flexible Schedules</li>
                 </ul>
-                <Link to="/signup" className="btn-program">Apply Now</Link>
+                <Link to={applyNowTarget} className="btn-program">Apply Now</Link>
               </div>
             </div>
             
@@ -136,7 +142,7 @@ const Home: React.FC = () => {
                   <li><i className="fas fa-check-circle"></i> Digital Resources</li>
                   <li><i className="fas fa-check-circle"></i> Virtual Support</li>
                 </ul>
-                <Link to="/signup" className="btn-program">Apply Now</Link>
+                <Link to={applyNowTarget} className="btn-program">Apply Now</Link>
               </div>
             </div>
             
@@ -152,7 +158,7 @@ const Home: React.FC = () => {
                   <li><i className="fas fa-check-circle"></i> Blended Learning</li>
                   <li><i className="fas fa-check-circle"></i> Career Advancement</li>
                 </ul>
-                <Link to="/signup" className="btn-program">Apply Now</Link>
+                <Link to={applyNowTarget} className="btn-program">Apply Now</Link>
               </div>
             </div>
 
@@ -169,7 +175,7 @@ const Home: React.FC = () => {
                   <li><i className="fas fa-check-circle"></i> Modern Campus Facilities</li>
                   <li><i className="fas fa-check-circle"></i> Student Support Services</li>
                 </ul>
-                <Link to="/signup" className="btn-program">Apply Now</Link>
+                <Link to={applyNowTarget} className="btn-program">Apply Now</Link>
               </div>
             </div>
           </div>

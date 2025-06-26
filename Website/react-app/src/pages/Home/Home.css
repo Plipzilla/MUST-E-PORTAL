@@ -102,10 +102,12 @@ body {
   font-size: 16px;
 }
 
-.btn-primary {
-  background: linear-gradient(90deg, #6fcf4b 0%, #a3d977 100%);
+.home-btn-primary {
+  background: #4CAF50;
   color: white;
   border: none;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.10);
+  transition: var(--transition);
 }
 
 .btn-secondary {
@@ -114,10 +116,11 @@ body {
   border: 2px solid white;
 }
 
-.btn-primary:hover {
-  background: linear-gradient(90deg, #7ed957 0%, #b6e388 100%);
+.home-btn-primary:hover {
+  background: linear-gradient(90deg, #003366 0%, #1976d2 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(126, 217, 87, 0.10);
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.10);
 }
 
 .btn-secondary:hover {
