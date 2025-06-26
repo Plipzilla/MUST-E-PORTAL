@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { useAuth } from '../../firebase/AuthContext';
+import { useUserClaims } from '../../firebase/useUserClaims';
 
 const Header: React.FC = () => {
   const { user, isLoading, logout } = useAuth();
+  const { admin, reviewer, loading: claimsLoading } = useUserClaims();
 
-  if (isLoading) {
+  if (isLoading || claimsLoading) {
     return (
       <header className="header">
         <div className="container header-container">
@@ -36,6 +38,8 @@ const Header: React.FC = () => {
               <>
                 <li><Link to="/application" className="nav-link">Application</Link></li>
                 <li><Link to="/dashboard" className="nav-link">Dashboard</Link></li>
+                {admin && <li><Link to="/admin" className="nav-link">Admin Panel</Link></li>}
+                {reviewer && <li><Link to="/reviewer" className="nav-link">Reviewer Dashboard</Link></li>}
               </>
             )}
             <li><Link to="/contact" className="nav-link">Contact</Link></li>
