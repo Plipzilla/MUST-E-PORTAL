@@ -72,15 +72,12 @@ body {
   font-weight: 700;
   margin-bottom: var(--spacing-lg);
   color: var(--white);
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .hero p {
   font-size: var(--font-size-lg);
   margin-bottom: var(--spacing-2xl);
   color: var(--white);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   font-weight: 500;
 }
 
@@ -115,9 +112,17 @@ body {
 }
 
 .btn-secondary {
-  background-color: transparent;
-  color: var(--white);
-  border: 2px solid var(--white);
+  background-color: var(--white) !important;
+  color: var(--primary) !important;
+  border: 2px solid var(--white) !important;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary) !important;
+  color: var(--white) !important;
+  border: 2px solid var(--white) !important;
+  box-shadow: none !important;
 }
 
 .home-btn-primary:hover {
@@ -125,11 +130,6 @@ body {
   color: var(--white);
   transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(0, 51, 102, 0.10);
-}
-
-.btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
 }
 
 /* Features Section */
@@ -293,14 +293,14 @@ body {
 
 .programs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--spacing-xl);
   margin-top: var(--spacing-2xl);
 }
 
 .program-card {
   background: var(--white);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
   transition: var(--transition);
@@ -324,8 +324,6 @@ body {
   font-size: var(--font-size-xl);
   font-weight: 600;
   color: var(--white);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .price {
