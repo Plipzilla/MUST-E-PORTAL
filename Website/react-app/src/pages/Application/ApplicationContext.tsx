@@ -216,16 +216,6 @@ const ApplicationContext = createContext<ApplicationContextType | undefined>(und
 
 export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<ApplicationData>(defaultData);
-  const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
-
-  // Autosave every 30 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      saveDraft();
-    }, 30000);
-
-    return () => clearInterval(timer);
-  }, [data]);
 
   // Save draft function
   const saveDraft = useCallback(async () => {
@@ -255,6 +245,15 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       console.error('Failed to save draft:', error);
     }
   }, [data]);
+
+  // Autosave every 30 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      saveDraft();
+    }, 30000);
+
+    return () => clearInterval(timer);
+  }, [saveDraft]);
 
   // Load draft function
   const loadDraft = useCallback(async () => {

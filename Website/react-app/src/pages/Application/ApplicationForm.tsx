@@ -52,8 +52,7 @@ const ApplicationFormInner: React.FC = () => {
     updateStep, 
     saveDraft, 
     loadDraft, 
-    isStepValid,
-    getStepProgress 
+    isStepValid /*, getStepProgress */
   } = useApplication();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

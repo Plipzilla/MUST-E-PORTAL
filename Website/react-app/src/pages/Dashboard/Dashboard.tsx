@@ -14,7 +14,7 @@ interface Application {
 
 const Dashboard: React.FC = () => {
   const [userName, setUserName] = useState('Guest User');
-  const [applications, setApplications] = useState<Application[]>([
+  const [applications] = useState<Application[]>([
     {
       id: '1',
       title: 'MSc in Computer Science',
@@ -51,16 +51,6 @@ const Dashboard: React.FC = () => {
       setUserName(user.name || user.email);
     }
   }, []);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'accepted': return 'green';
-      case 'review': return 'orange';
-      case 'pending': return 'purple';
-      case 'rejected': return 'red';
-      default: return 'gray';
-    }
-  };
 
   const getStatusText = (status: string) => {
     switch (status) {

@@ -82,6 +82,13 @@
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 }
 
+.stat-icon i {
+  color: var(--white);
+  font-size: var(--font-size-xl);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
 .stat-info h3 {
   font-size: var(--font-size-3xl);
   font-weight: 700;

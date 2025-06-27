@@ -42,7 +42,7 @@ const Step1PersonalInfo: React.FC = () => {
         return '';
       case 'telephoneNumbers':
         if (!value) return 'Telephone number is required';
-        if (!/^[\+]?[0-9\s\-\(\)]+$/.test(value)) return 'Please enter a valid phone number';
+        if (!/^[+]?[-0-9\s()]+$/.test(value)) return 'Please enter a valid phone number';
         return '';
       case 'emailAddress':
         if (!value) return 'Email address is required';
@@ -123,7 +123,7 @@ const Step1PersonalInfo: React.FC = () => {
       <div className="file-preview">
         <img 
           src={URL.createObjectURL(data.step1.passportPhoto)} 
-          alt="Passport photo preview" 
+          alt="Profile" 
           className="photo-preview"
         />
         <div className="file-info">

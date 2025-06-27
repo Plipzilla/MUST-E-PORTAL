@@ -33,12 +33,17 @@
   font-weight: 700;
   margin-bottom: var(--spacing-lg);
   line-height: var(--line-height-tight);
+  color: var(--white);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .auth-info p {
   font-size: var(--font-size-lg);
   margin-bottom: var(--spacing-xl);
-  opacity: 0.9;
+  color: var(--white);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  font-weight: 500;
   line-height: var(--line-height-relaxed);
 }
 
@@ -75,6 +80,7 @@
   color: var(--dark);
   margin-bottom: var(--spacing-sm);
   text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .auth-form p {
