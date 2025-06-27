@@ -10,8 +10,6 @@ import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './firebase/AuthContext';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import { useUserClaims } from './firebase/useUserClaims';
-import PersonalInfo from './pages/Application/PersonalInfo';
-import { ApplicationProvider } from './pages/Application/ApplicationContext';
 import ApplicationForm from './pages/Application/ApplicationForm';
 import './App.css';
 

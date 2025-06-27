@@ -1,10 +1,149 @@
-/* Import Font Awesome for icons */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-
+/* App-specific styles */
 .App {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Page-specific layouts */
+.page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--spacing-2xl) 0;
+}
+
+/* Loading states */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--spacing-lg);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--gray-200);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--gray-600);
+  font-size: var(--font-size-base);
+}
+
+/* Error states */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--spacing-lg);
+  text-align: center;
+}
+
+.error-icon {
+  font-size: var(--font-size-4xl);
+  color: var(--danger);
+}
+
+.error-title {
+  color: var(--danger);
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+}
+
+.error-message {
+  color: var(--gray-600);
+  font-size: var(--font-size-base);
+  max-width: 500px;
+}
+
+/* Success states */
+.success-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--spacing-lg);
+  text-align: center;
+}
+
+.success-icon {
+  font-size: var(--font-size-4xl);
+  color: var(--success);
+}
+
+.success-title {
+  color: var(--success);
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+}
+
+.success-message {
+  color: var(--gray-600);
+  font-size: var(--font-size-base);
+  max-width: 500px;
+}
+
+/* Empty states */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: var(--spacing-lg);
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.empty-icon {
+  font-size: var(--font-size-3xl);
+  color: var(--gray-400);
+}
+
+.empty-title {
+  color: var(--gray-600);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+}
+
+.empty-message {
+  color: var(--gray-500);
+  font-size: var(--font-size-base);
+  max-width: 400px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .loading-container,
+  .error-container,
+  .success-container,
+  .empty-container {
+    min-height: 300px;
+    padding: var(--spacing-xl);
+  }
 }
 
 /* Global button styles */
@@ -23,64 +162,28 @@
 }
 
 .btn-primary {
-  background-color: #4CAF50;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
 }
 
 .btn-secondary {
-  background-color: transparent;
-  color: white;
-  border: 2px solid white;
+  background-color: var(--gray-200);
+  color: var(--gray-800);
+  border: 1px solid var(--gray-300);
 }
 
 .btn-primary:hover {
-  background-color: #3d8b40;
+  background-color: var(--primary-dark);
   transform: translateY(-2px);
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--gray-300);
   transform: translateY(-2px);
 }
 
-/* Container utility */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  padding: 0 var(--spacing-lg);
 }

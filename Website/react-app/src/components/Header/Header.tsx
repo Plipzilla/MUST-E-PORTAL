@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useAuth } from '../../firebase/AuthContext';
 import { useUserClaims } from '../../firebase/useUserClaims';
@@ -8,6 +8,14 @@ const Header: React.FC = () => {
   const { user, isLoading, logout } = useAuth();
   const { admin, reviewer, loading: claimsLoading } = useUserClaims();
   const navigate = useNavigate();
+
+  // Debug function to log active state
+  const debugActiveState = (isActive: boolean, path: string) => {
+    if (isActive) {
+      console.log(`Active link detected: ${path}`);
+    }
+    return `nav-link ${isActive ? 'active' : ''}`;
+  };
 
   if (isLoading || claimsLoading) {
     return (
@@ -33,34 +41,92 @@ const Header: React.FC = () => {
         
         <nav>
           <ul>
-            <li><Link to="/" className="nav-link">Home</Link></li>
-            <li><Link to="/programs" className="nav-link">Programs</Link></li>
+            <li>
+              <NavLink 
+                to="/" 
+                className={({ isActive }) => debugActiveState(isActive, 'Home')}
+                end
+              >
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink 
+                to="/programs" 
+                className={({ isActive }) => debugActiveState(isActive, 'Programs')}
+              >
+                Programs
+              </NavLink>
+            </li>
             {user && (
               <>
                 {admin ? (
-                  <li><Link to="/admin" className="nav-link">Admin Panel</Link></li>
+                  <li>
+                    <NavLink 
+                      to="/admin" 
+                      className={({ isActive }) => debugActiveState(isActive, 'Admin')}
+                    >
+                      Admin Panel
+                    </NavLink>
+                  </li>
                 ) : (
                   <>
-                    <li><Link to="/application" className="nav-link">Application</Link></li>
-                    <li><Link to="/dashboard" className="nav-link">Dashboard</Link></li>
-                    {reviewer && <li><Link to="/reviewer" className="nav-link">Reviewer Dashboard</Link></li>}
+                    <li>
+                      <NavLink 
+                        to="/application" 
+                        className={({ isActive }) => debugActiveState(isActive, 'Application')}
+                      >
+                        Application
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink 
+                        to="/dashboard" 
+                        className={({ isActive }) => debugActiveState(isActive, 'Dashboard')}
+                      >
+                        Dashboard
+                      </NavLink>
+                    </li>
+                    {reviewer && (
+                      <li>
+                        <NavLink 
+                          to="/reviewer" 
+                          className={({ isActive }) => debugActiveState(isActive, 'Reviewer')}
+                        >
+                          Reviewer Dashboard
+                        </NavLink>
+                      </li>
+                    )}
                   </>
                 )}
               </>
             )}
-            <li><Link to="/contact" className="nav-link">Contact</Link></li>
+            <li>
+              <NavLink 
+                to="/contact" 
+                className={({ isActive }) => debugActiveState(isActive, 'Contact')}
+              >
+                Contact
+              </NavLink>
+            </li>
           </ul>
         </nav>
         
         <div className="auth-buttons">
           {!user ? (
             <>
-              <Link to="/login" className="btn btn-login">
+              <NavLink 
+                to="/login" 
+                className={({ isActive }) => `btn btn-login ${isActive ? 'active' : ''}`}
+              >
                 <i className="fas fa-sign-in-alt"></i> Log in
-              </Link>
-              <Link to="/signup" className="btn btn-signup">
+              </NavLink>
+              <NavLink 
+                to="/signup" 
+                className={({ isActive }) => `btn btn-signup ${isActive ? 'active' : ''}`}
+              >
                 <i className="fas fa-user-plus"></i> Sign up
-              </Link>
+              </NavLink>
             </>
           ) : (
             <button onClick={() => logout(navigate)} className="btn btn-login">
