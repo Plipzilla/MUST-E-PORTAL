@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useAuth } from '../../firebase/AuthContext';
 import { useUserClaims } from '../../firebase/useUserClaims';
+import logo from '../../MUST images/Universal/logo-white.png';
 
 const Header: React.FC = () => {
   const { user, isLoading, logout } = useAuth();
@@ -22,8 +23,10 @@ const Header: React.FC = () => {
       <header className="header">
         <div className="container header-container">
           <div className="logo">
-            <i className="fas fa-graduation-cap"></i>
-            <h1>MUST E-Admission</h1>
+            <NavLink to="/" className="logo">
+              <img src={logo} alt="MUST Logo" className="header-logo" />
+              <h1>MUST E-Admission</h1>
+            </NavLink>
           </div>
           <div className="header-loading">Loading...</div>
         </div>
@@ -35,8 +38,10 @@ const Header: React.FC = () => {
     <header className="header">
       <div className="container header-container">
         <div className="logo">
-          <i className="fas fa-graduation-cap"></i>
-          <h1>MUST E-Admission</h1>
+          <NavLink to="/" className="logo">
+            <img src={logo} alt="MUST Logo" className="header-logo" />
+            <h1>MUST E-Admission</h1>
+          </NavLink>
         </div>
         
         <nav>
@@ -129,7 +134,7 @@ const Header: React.FC = () => {
               </NavLink>
             </>
           ) : (
-            <button onClick={() => logout(navigate)} className="btn btn-login">
+            <button onClick={() => navigate('/logout')} className="btn btn-login">
               <i className="fas fa-sign-out-alt"></i> Logout
             </button>
           )}

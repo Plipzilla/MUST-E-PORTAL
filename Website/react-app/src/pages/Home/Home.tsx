@@ -1,18 +1,36 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import { useAuth } from '../../firebase/AuthContext';
 import { useUserClaims } from '../../firebase/useUserClaims';
+import img1 from '../../MUST images/Login/building2.jpg';
+import img2 from '../../MUST images/Login/lib auds.jpg';
+import img3 from '../../MUST images/Login/building.jpg';
+import img4 from '../../MUST images/Login/clinic.jpg';
+
+const sliderImages = [img1, img2, img3, img4];
 
 const Home: React.FC = () => {
   const { user } = useAuth();
   const { admin, reviewer } = useUserClaims();
   const applyNowTarget = user && !admin && !reviewer ? '/application' : '/signup';
 
+  // Slider state
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % sliderImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToSlide = (idx: number) => setCurrent(idx);
+
   return (
     <main className="page-content">
       {/* Hero Section */}
-      <section className="hero">
+      <section className="hero hero-slider" style={{ backgroundImage: `url(${sliderImages[current]})` }}>
+        <div className="hero-overlay" />
         <div className="container hero-content">
           <h1>Your Future Starts Here at MUST</h1>
           <p>Apply to Malawi University of Science and Technology through our streamlined online admission portal designed for postgraduate, ODL, weekend, and economic students</p>
@@ -24,6 +42,16 @@ const Home: React.FC = () => {
               <i className="fas fa-user-graduate"></i> Check Admission Status
             </Link>
           </div>
+        </div>
+        <div className="hero-dots">
+          {sliderImages.map((_, idx) => (
+            <button
+              key={idx}
+              className={`hero-dot${idx === current ? ' active' : ''}`}
+              onClick={() => goToSlide(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
       </section>
 

@@ -52,9 +52,9 @@ const Login: React.FC = () => {
       // Check for admin claim
       const tokenResult = await user.getIdTokenResult();
       if (tokenResult.claims.admin) {
-        navigate('/admin');
+        setTimeout(() => navigate('/admin'), 1000);
       } else {
-        navigate('/dashboard');
+        setTimeout(() => navigate('/dashboard'), 1000);
       }
     } catch (error: any) {
       setError(getFriendlyError(error, 'form'));
@@ -80,9 +80,9 @@ const Login: React.FC = () => {
       }));
       const tokenResult = await user.getIdTokenResult();
       if (tokenResult.claims.admin) {
-        navigate('/admin');
+        setTimeout(() => navigate('/admin'), 1000);
       } else {
-        navigate('/dashboard');
+        setTimeout(() => navigate('/dashboard'), 1000);
       }
     } catch (error: any) {
       setError(getFriendlyError(error, 'google'));
@@ -108,9 +108,9 @@ const Login: React.FC = () => {
       }));
       const tokenResult = await user.getIdTokenResult();
       if (tokenResult.claims.admin) {
-        navigate('/admin');
+        setTimeout(() => navigate('/admin'), 1000);
       } else {
-        navigate('/dashboard');
+        setTimeout(() => navigate('/dashboard'), 1000);
       }
     } catch (error: any) {
       setError(getFriendlyError(error, 'facebook'));

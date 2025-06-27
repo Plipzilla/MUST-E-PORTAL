@@ -412,4 +412,125 @@ body {
   .programs {
     padding: var(--spacing-2xl) 0;
   }
+}
+
+.hero.hero-slider {
+  width: 100%;
+  aspect-ratio: 16/5;
+  min-height: 440px;
+  max-height: 600px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+
+@supports not (aspect-ratio: 16/5) {
+  .hero.hero-slider {
+    height: 0;
+    padding-top: 31.25%; /* 5/16 = 0.3125 */
+    min-height: 440px;
+    max-height: 600px;
+  }
+}
+
+.hero.hero-slider::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  background: inherit;
+  filter: brightness(0.95) saturate(1.1);
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, rgba(0,34,68,0.7) 0%, rgba(0,34,68,0.5) 60%, rgba(0,34,68,0.8) 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 2;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-dots {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  z-index: 3;
+}
+
+.hero-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  border: none;
+  outline: none;
+  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+.hero-dot.active {
+  background: #FF9800;
+  transform: scale(1.2);
+}
+
+@media (max-width: 1024px) {
+  .hero.hero-slider {
+    aspect-ratio: 16/7;
+    min-height: 320px;
+    max-height: 400px;
+  }
+  @supports not (aspect-ratio: 16/7) {
+    .hero.hero-slider {
+      height: 0;
+      padding-top: 43.75%; /* 7/16 = 0.4375 */
+      min-height: 320px;
+      max-height: 400px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hero.hero-slider {
+    aspect-ratio: 16/10;
+    min-height: 200px;
+    max-height: 300px;
+  }
+  @supports not (aspect-ratio: 16/10) {
+    .hero.hero-slider {
+      height: 0;
+      padding-top: 62.5%; /* 10/16 = 0.625 */
+      min-height: 200px;
+      max-height: 300px;
+    }
+  }
+  .hero-content {
+    padding: 0 10px;
+  }
+  .hero-dots {
+    bottom: 16px;
+  }
 } 

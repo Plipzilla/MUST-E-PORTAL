@@ -169,21 +169,6 @@ const ApplicationFormInner: React.FC = () => {
       <ProgressBar />
 
       <div className="form-content">
-        <div className="step-navigation">
-          {steps.map((step, index) => (
-            <button
-              key={step}
-              className={`step-nav-btn ${index === data.currentStep ? 'active' : ''} ${index < data.currentStep ? 'completed' : ''} ${isStepValid(index) ? 'valid' : ''}`}
-              onClick={() => handleStepClick(index)}
-              disabled={index > data.currentStep && !isStepValid(index)}
-            >
-              <span className="step-number">{index + 1}</span>
-              <span className="step-title">{step}</span>
-              {index < data.currentStep && <span className="step-check">✓</span>}
-            </button>
-          ))}
-        </div>
-
         <div className="step-content">
           <div className="step-header">
             <h2>Step {data.currentStep + 1}: {steps[data.currentStep]}</h2>
