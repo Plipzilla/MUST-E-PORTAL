@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Contact.css';
+import HeroBar from '../../components/HeroBar/HeroBar';
+import img1 from '../../MUST images/Login/building2.jpg';
+import img2 from '../../MUST images/Login/lib auds.jpg';
+import img3 from '../../MUST images/Login/building.jpg';
+import img4 from '../../MUST images/Login/clinic.jpg';
+
+const sliderImages = [img1, img2, img3, img4];
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -27,15 +34,11 @@ const Contact: React.FC = () => {
 
   return (
     <div className="contact-page">
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="container">
-          <div className="hero-content">
-            <h1>Contact Admissions Office</h1>
-            <p>Get in touch with our team for any inquiries about admissions, programs, or technical support</p>
-          </div>
-        </div>
-      </section>
+      <HeroBar
+        title="Contact Admissions Office"
+        subtitle="Get in touch with our team for any inquiries about admissions, programs, or technical support"
+        images={[img1]}
+      />
 
       {/* Contact Content */}
       <section className="contact-section">

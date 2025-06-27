@@ -10,6 +10,18 @@
   padding: var(--spacing-3xl) 0 var(--spacing-2xl);
   text-align: center;
   color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+}
+
+.hero-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-content h1 {
