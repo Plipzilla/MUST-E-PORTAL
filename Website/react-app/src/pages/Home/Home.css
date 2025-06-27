@@ -37,7 +37,7 @@ body {
 /* Page Content */
 .page-content {
   flex: 1;
-  padding: var(--spacing-2xl) 0;
+  padding: 0.5rem 0;
 }
 
 /* Hero Section */
@@ -415,10 +415,14 @@ body {
 }
 
 .hero.hero-slider {
-  width: 100%;
-  aspect-ratio: 16/5;
-  min-height: 440px;
-  max-height: 600px;
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  margin-bottom: 32px;
+  height: 420px;
+  max-height: 420px;
+  min-height: 320px;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -429,14 +433,32 @@ body {
   padding: 0;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  border-radius: 12px;
 }
 
-@supports not (aspect-ratio: 16/5) {
+@media (max-width: 1024px) {
   .hero.hero-slider {
-    height: 0;
-    padding-top: 31.25%; /* 5/16 = 0.3125 */
-    min-height: 440px;
-    max-height: 600px;
+    height: 320px;
+    max-height: 320px;
+    margin-top: 2px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero.hero-slider {
+    height: 200px;
+    max-height: 200px;
+    margin-top: 1px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+  }
+  .hero-content {
+    padding: 0 10px;
+  }
+  .hero-dots {
+    bottom: 10px;
   }
 }
 
@@ -495,42 +517,4 @@ body {
 .hero-dot.active {
   background: #FF9800;
   transform: scale(1.2);
-}
-
-@media (max-width: 1024px) {
-  .hero.hero-slider {
-    aspect-ratio: 16/7;
-    min-height: 320px;
-    max-height: 400px;
-  }
-  @supports not (aspect-ratio: 16/7) {
-    .hero.hero-slider {
-      height: 0;
-      padding-top: 43.75%; /* 7/16 = 0.4375 */
-      min-height: 320px;
-      max-height: 400px;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .hero.hero-slider {
-    aspect-ratio: 16/10;
-    min-height: 200px;
-    max-height: 300px;
-  }
-  @supports not (aspect-ratio: 16/10) {
-    .hero.hero-slider {
-      height: 0;
-      padding-top: 62.5%; /* 10/16 = 0.625 */
-      min-height: 200px;
-      max-height: 300px;
-    }
-  }
-  .hero-content {
-    padding: 0 10px;
-  }
-  .hero-dots {
-    bottom: 16px;
-  }
 } 
