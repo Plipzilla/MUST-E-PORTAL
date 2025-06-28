@@ -71,9 +71,9 @@ const Login: React.FC = () => {
       
       // Determine redirect path based on user role
       let redirectPath = '/dashboard';
-      if (user.roles.includes('admin')) {
+      if (user.roles?.includes('admin')) {
         redirectPath = '/admin';
-      } else if (user.roles.includes('reviewer')) {
+      } else if (user.roles?.includes('reviewer')) {
         redirectPath = '/admin'; // Reviewers also go to admin dashboard
       }
       

@@ -99,6 +99,17 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.form-row {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 .form-group label {
   display: block;
   margin-bottom: var(--spacing-sm);
@@ -329,5 +340,14 @@
   
   .social-login {
     flex-direction: column;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: var(--spacing-lg);
   }
 } 

@@ -44,7 +44,8 @@ const Signup: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -68,7 +69,8 @@ const Signup: React.FC = () => {
 
     try {
       const response = await AuthService.register({
-        name,
+        first_name: firstName,
+        last_name: lastName,
         email,
         password,
         password_confirmation: confirmPassword
@@ -83,7 +85,7 @@ const Signup: React.FC = () => {
       localStorage.setItem('currentUser', JSON.stringify({
         uid: user.id.toString(),
         email: user.email,
-        name: user.name,
+        name: `${user.first_name} ${user.last_name}`,
         photoURL: null
       }));
 
@@ -92,9 +94,9 @@ const Signup: React.FC = () => {
 
       // Determine redirect path based on user role
       let redirectPath = '/dashboard';
-      if (user.roles.includes('admin')) {
+      if (user.roles?.includes('admin')) {
         redirectPath = '/admin';
-      } else if (user.roles.includes('reviewer')) {
+      } else if (user.roles?.includes('reviewer')) {
         redirectPath = '/admin'; // Reviewers also go to admin dashboard
       }
       
@@ -164,16 +166,30 @@ const Signup: React.FC = () => {
               {error && <div className="error-message">{error}</div>}
               
               <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="name">Full Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="form-control"
-                    required
-                  />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="firstName">First Name</label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="form-control"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="lastName">Last Name</label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="form-control"
+                      required
+                    />
+                  </div>
                 </div>
                 
                 <div className="form-group">

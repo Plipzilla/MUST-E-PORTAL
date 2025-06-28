@@ -326,8 +326,6 @@ const Programs: React.FC = () => {
     }
   ];
 
-
-
   return (
     <main className="page-content">
       <section className="programs-hero">
@@ -335,22 +333,14 @@ const Programs: React.FC = () => {
           <div className="hero-content">
             <h1>Academic Programmes</h1>
             <p>Discover world-class programmes at Malawi's premier science and technology university</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="programs-intro">
-        <div className="container">
-          <div className="intro-content">
-            <h2>Where Excellence Reigns</h2>
-            <p>
-              At MUST, we offer innovative programmes aligned with global development agendas including 
-              MW2063, Africa Agenda 2063, and the UN Sustainable Development Goals. Our graduates are 
-              internationally competitive and ready to lead in science, technology, and innovation.
-            </p>
-            <div className="apply-cta">
-              <Link to="/application" className="btn btn-primary">Apply Now</Link>
-              <Link to="/contact" className="btn btn-outline">Contact Admissions</Link>
+            
+            <div className="hero-intro">
+              <h2>Where Excellence Reigns</h2>
+              <p>
+                At MUST, we offer innovative programmes aligned with global development agendas including 
+                MW2063, Africa Agenda 2063, and the UN Sustainable Development Goals. Our graduates are 
+                internationally competitive and ready to lead in science, technology, and innovation.
+              </p>
             </div>
           </div>
         </div>

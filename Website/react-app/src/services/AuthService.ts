@@ -2,7 +2,9 @@ import axios, { AxiosResponse } from 'axios';
 
 // Configure axios defaults
 axios.defaults.baseURL = 'http://localhost:8000/api';
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false; // Laravel Passport doesn't need cookies
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 // Request interceptor to add auth token
 axios.interceptors.request.use((config) => {
@@ -13,37 +15,15 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor to handle token refresh
+// Response interceptor to handle token expiration
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      // Token expired, try to refresh
-      const refreshToken = localStorage.getItem('refresh_token');
-      if (refreshToken) {
-        try {
-          const response = await axios.post('/auth/refresh', {
-            refresh_token: refreshToken
-          });
-          const { access_token } = response.data;
-          localStorage.setItem('auth_token', access_token);
-          // Retry the original request
-          error.config.headers.Authorization = `Bearer ${access_token}`;
-          return axios.request(error.config);
-        } catch (refreshError) {
-          // Refresh failed, clear tokens and redirect
-          localStorage.removeItem('auth_token');
-          localStorage.removeItem('refresh_token');
-          localStorage.removeItem('user');
-          window.location.href = '/login';
-        }
-      } else {
-        // No refresh token, clear tokens and redirect
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-      }
+      // Token expired or invalid, clear tokens and redirect
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }
@@ -51,11 +31,23 @@ axios.interceptors.response.use(
 
 export interface User {
   id: number;
-  name: string;
+  name?: string;
+  first_name?: string;
+  last_name?: string;
   email: string;
   email_verified_at: string | null;
-  roles: string[];
-  permissions: string[];
+  phone?: string;
+  date_of_birth?: string;
+  gender?: string;
+  nationality?: string;
+  address?: string;
+  provider?: string;
+  provider_id?: string;
+  avatar?: string;
+  last_activity?: string;
+  session_timeout?: number;
+  roles?: any[];
+  permissions?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -66,18 +58,25 @@ export interface LoginCredentials {
 }
 
 export interface RegisterData {
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   password_confirmation: string;
+  phone?: string;
+  date_of_birth?: string;
+  gender?: string;
+  nationality?: string;
+  address?: string;
 }
 
 export interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
+  success: boolean;
+  message: string;
+  user: User;
+  token: string;
   token_type: string;
   expires_in: number;
-  user: User;
 }
 
 class AuthService {
@@ -85,14 +84,18 @@ class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       const response: AxiosResponse<AuthResponse> = await axios.post('/auth/login', credentials);
-      const { access_token, refresh_token, user } = response.data;
       
-      // Store tokens
-      localStorage.setItem('auth_token', access_token);
-      localStorage.setItem('refresh_token', refresh_token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      return response.data;
+      if (response.data.success) {
+        const { token, user } = response.data;
+        
+        // Store tokens
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        return response.data;
+      } else {
+        throw new Error(response.data.message || 'Login failed');
+      }
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Login failed');
     }
@@ -102,14 +105,18 @@ class AuthService {
   async register(userData: RegisterData): Promise<AuthResponse> {
     try {
       const response: AxiosResponse<AuthResponse> = await axios.post('/auth/register', userData);
-      const { access_token, refresh_token, user } = response.data;
       
-      // Store tokens
-      localStorage.setItem('auth_token', access_token);
-      localStorage.setItem('refresh_token', refresh_token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      return response.data;
+      if (response.data.success) {
+        const { token, user } = response.data;
+        
+        // Store tokens
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        return response.data;
+      } else {
+        throw new Error(response.data.message || 'Registration failed');
+      }
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Registration failed');
     }
@@ -125,7 +132,6 @@ class AuthService {
     } finally {
       // Clear local storage
       localStorage.removeItem('auth_token');
-      localStorage.removeItem('refresh_token');
       localStorage.removeItem('user');
     }
   }
@@ -154,13 +160,16 @@ class AuthService {
   // Check if user has specific role
   hasRole(role: string): boolean {
     const user = this.getCurrentUser();
-    return user?.roles.includes(role) || false;
+    if (!user?.roles) return false;
+    return user.roles.some((userRole: any) => 
+      userRole.name === role || userRole === role
+    );
   }
 
   // Check if user has specific permission
   hasPermission(permission: string): boolean {
     const user = this.getCurrentUser();
-    return user?.permissions.includes(permission) || false;
+    return user?.permissions?.includes(permission) || false;
   }
 
   // Check if user is admin
@@ -181,12 +190,40 @@ class AuthService {
   // Refresh user data
   async refreshUser(): Promise<User> {
     try {
-      const response: AxiosResponse<{ user: User }> = await axios.get('/auth/user');
-      const { user } = response.data;
-      localStorage.setItem('user', JSON.stringify(user));
-      return user;
+      const response: AxiosResponse<{ success: boolean; user: User }> = await axios.get('/auth/user');
+      
+      if (response.data.success) {
+        const { user } = response.data;
+        localStorage.setItem('user', JSON.stringify(user));
+        return user;
+      } else {
+        throw new Error('Failed to refresh user data');
+      }
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to refresh user data');
+    }
+  }
+
+  // Check authentication status
+  async checkAuth(): Promise<User | null> {
+    try {
+      const response: AxiosResponse<{ success: boolean; user: User; authenticated: boolean }> = await axios.get('/auth/check');
+      
+      if (response.data.success && response.data.authenticated) {
+        const { user } = response.data;
+        localStorage.setItem('user', JSON.stringify(user));
+        return user;
+      } else {
+        // Not authenticated, clear local storage
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        return null;
+      }
+    } catch (error: any) {
+      // Error checking auth, clear local storage
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user');
+      return null;
     }
   }
 
@@ -203,14 +240,11 @@ class AuthService {
   // Handle OAuth callback
   async handleOAuthCallback(token: string): Promise<User> {
     try {
-      const response: AxiosResponse<AuthResponse> = await axios.get(`/auth/callback?token=${token}`);
-      const { access_token, refresh_token, user } = response.data;
+      // Store the token
+      localStorage.setItem('auth_token', token);
       
-      // Store tokens
-      localStorage.setItem('auth_token', access_token);
-      localStorage.setItem('refresh_token', refresh_token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
+      // Get user data
+      const user = await this.refreshUser();
       return user;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'OAuth callback failed');
