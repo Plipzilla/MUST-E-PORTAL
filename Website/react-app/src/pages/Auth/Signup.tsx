@@ -1,30 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '../../firebase/config';
+import AuthService from '../../services/AuthService';
 import './Auth.css';
 
-// Helper to map Firebase errors to user-friendly messages for signup
+// Helper to map API errors to user-friendly messages for signup
 const getSignupFriendlyError = (error: any, context: 'form' | 'google' | 'facebook') => {
-  if (!error || !error.code) return 'Something went wrong. Please try again.';
-  switch (error.code) {
-    case 'auth/email-already-in-use':
-      return 'An account already exists with this email.';
-    case 'auth/invalid-email':
-      return 'Please enter a valid email address.';
-    case 'auth/weak-password':
-      return 'Password is too weak. Please use at least 6 characters.';
-    case 'auth/popup-closed-by-user':
-      return `The ${context === 'google' ? 'Google' : context === 'facebook' ? 'Facebook' : 'social'} sign up was cancelled.`;
-    case 'auth/account-exists-with-different-credential':
-      return 'An account already exists with this email using a different sign-up method.';
-    case 'auth/too-many-requests':
-      return 'Too many attempts. Please try again later.';
-    case 'auth/popup-blocked':
-      return 'Popup was blocked. Please allow popups and try again.';
-    default:
-      return 'Something went wrong. Please try again.';
+  if (!error) return 'Something went wrong. Please try again.';
+  
+  const message = typeof error === 'string' ? error : error.message || 'Something went wrong. Please try again.';
+  
+  // Map common Laravel validation errors
+  if (message.includes('email') && message.includes('taken')) {
+    return 'An account already exists with this email.';
   }
+  if (message.includes('email')) {
+    return 'Please enter a valid email address.';
+  }
+  if (message.includes('password') && message.includes('characters')) {
+    return 'Password must be at least 8 characters long.';
+  }
+  if (message.includes('password') && message.includes('confirmation')) {
+    return 'Password confirmation does not match.';
+  }
+  if (message.includes('name')) {
+    return 'Please enter your full name.';
+  }
+  if (message.includes('too many attempts')) {
+    return 'Too many attempts. Please try again later.';
+  }
+  if (context === 'google' && message.includes('cancelled')) {
+    return 'The Google sign-up was cancelled.';
+  }
+  if (context === 'facebook' && message.includes('cancelled')) {
+    return 'The Facebook sign-up was cancelled.';
+  }
+  
+  return message;
 };
 
 const Signup: React.FC = () => {
@@ -56,27 +67,36 @@ const Signup: React.FC = () => {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      
-      // Update user profile with display name
-      await updateProfile(user, {
-        displayName: name
+      const response = await AuthService.register({
+        name,
+        email,
+        password,
+        password_confirmation: confirmPassword
       });
+      
+      const { user } = response;
       
       // Clear any previous session data
       sessionStorage.clear();
       
-      // Store user info in localStorage
+      // Store user info in localStorage for legacy compatibility
       localStorage.setItem('currentUser', JSON.stringify({
-        uid: user.uid,
+        uid: user.id.toString(),
         email: user.email,
-        name: name
+        name: user.name,
+        photoURL: null
       }));
 
-      // Check for admin claim
-      const tokenResult = await user.getIdTokenResult();
-      const redirectPath = tokenResult.claims.admin ? '/admin' : '/dashboard';
+      // Set session timestamp
+      localStorage.setItem('sessionTimestamp', Date.now().toString());
+
+      // Determine redirect path based on user role
+      let redirectPath = '/dashboard';
+      if (user.roles.includes('admin')) {
+        redirectPath = '/admin';
+      } else if (user.roles.includes('reviewer')) {
+        redirectPath = '/admin'; // Reviewers also go to admin dashboard
+      }
       
       // Prevent back button access to signup page
       window.history.replaceState(null, '', redirectPath);
@@ -94,30 +114,12 @@ const Signup: React.FC = () => {
     setLoading(true);
     setLoadingButton('google');
     setError('');
+    
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      
-      // Clear any previous session data
-      sessionStorage.clear();
-      
-      // Store user info in localStorage
-      localStorage.setItem('currentUser', JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        name: user.displayName || user.email
-      }));
-      
-      const tokenResult = await user.getIdTokenResult();
-      const redirectPath = tokenResult.claims.admin ? '/admin' : '/dashboard';
-      
-      // Prevent back button access to signup page
-      window.history.replaceState(null, '', redirectPath);
-      navigate(redirectPath, { replace: true });
+      await AuthService.loginWithGoogle();
+      // The OAuth flow will redirect to Google and back to our callback
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'google'));
-    } finally {
       setLoading(false);
       setLoadingButton(null);
     }
@@ -128,30 +130,12 @@ const Signup: React.FC = () => {
     setLoading(true);
     setLoadingButton('facebook');
     setError('');
+    
     try {
-      const provider = new FacebookAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      
-      // Clear any previous session data
-      sessionStorage.clear();
-      
-      // Store user info in localStorage
-      localStorage.setItem('currentUser', JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        name: user.displayName || user.email
-      }));
-      
-      const tokenResult = await user.getIdTokenResult();
-      const redirectPath = tokenResult.claims.admin ? '/admin' : '/dashboard';
-      
-      // Prevent back button access to signup page
-      window.history.replaceState(null, '', redirectPath);
-      navigate(redirectPath, { replace: true });
+      await AuthService.loginWithFacebook();
+      // The OAuth flow will redirect to Facebook and back to our callback
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'facebook'));
-    } finally {
       setLoading(false);
       setLoadingButton(null);
     }
@@ -213,9 +197,9 @@ const Signup: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="form-control"
                     required
-                    minLength={6}
+                    minLength={8}
                   />
-                  <small>Password must be at least 6 characters long</small>
+                  <small className="form-text">Password must be at least 8 characters long</small>
                 </div>
                 
                 <div className="form-group">
@@ -230,39 +214,58 @@ const Signup: React.FC = () => {
                   />
                 </div>
                 
-                <div className="form-group">
-                  <label className="checkbox-group">
+                <div className="terms-agreement">
+                  <label className="checkbox-label">
                     <input type="checkbox" required />
-                    <span>I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link></span>
+                    I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>
                   </label>
                 </div>
                 
                 <button 
                   type="submit" 
-                  className="btn-auth"
+                  className="btn btn-primary btn-block"
                   disabled={loading}
                 >
-                  {loading ? 'Creating Account...' : 'Create Account'}
+                  {loadingButton === 'form' ? 'Creating Account...' : 'Create Account'}
                 </button>
               </form>
               
-              <div className="form-separator">
-                <span>or</span>
+              <div className="divider">
+                <span>Or sign up with</span>
               </div>
               
-              <div className="social-login">
-                <button className="social-btn google" onClick={handleGoogleSignup} disabled={loading && loadingButton !== 'google' ? true : loading}>
-                  <i className="fab fa-google"></i>
-                  {loading && loadingButton === 'google' ? 'Creating Account...' : 'Continue with Google'}
+              <div className="social-buttons">
+                <button 
+                  type="button" 
+                  className="btn btn-google"
+                  onClick={handleGoogleSignup}
+                  disabled={loading}
+                >
+                  {loadingButton === 'google' ? (
+                    <span className="loading-spinner"></span>
+                  ) : (
+                    <i className="fab fa-google"></i>
+                  )}
+                  Google
                 </button>
-                <button className="social-btn facebook" onClick={handleFacebookSignup} disabled={loading && loadingButton !== 'facebook' ? true : loading}>
-                  <i className="fab fa-facebook-f"></i>
-                  {loading && loadingButton === 'facebook' ? 'Creating Account...' : 'Continue with Facebook'}
+                
+                <button 
+                  type="button" 
+                  className="btn btn-facebook"
+                  onClick={handleFacebookSignup}
+                  disabled={loading}
+                >
+                  {loadingButton === 'facebook' ? (
+                    <span className="loading-spinner"></span>
+                  ) : (
+                    <i className="fab fa-facebook-f"></i>
+                  )}
+                  Facebook
                 </button>
               </div>
               
-              <div className="auth-switch">
-                <p>Already have an account? <Link to="/login">Sign in here</Link></p>
+              <div className="auth-footer">
+                <p>Already have an account? <Link to="/login">Sign In</Link></p>
               </div>
             </div>
           </div>

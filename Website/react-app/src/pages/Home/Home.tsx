@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import { useAuth } from '../../firebase/AuthContext';
-import { useUserClaims } from '../../firebase/useUserClaims';
 import img1 from '../../MUST images/Login/building2.jpg';
 import img2 from '../../MUST images/Login/lib auds.jpg';
 import img3 from '../../MUST images/Login/building.jpg';
@@ -11,9 +10,8 @@ import img4 from '../../MUST images/Login/clinic.jpg';
 const sliderImages = [img1, img2, img3, img4];
 
 const Home: React.FC = () => {
-  const { user } = useAuth();
-  const { admin, reviewer } = useUserClaims();
-  const applyNowTarget = user && !admin && !reviewer ? '/application' : '/signup';
+  const { user, isAdmin, isReviewer } = useAuth();
+  const applyNowTarget = user && !isAdmin() && !isReviewer() ? '/application' : '/signup';
 
   // Scroll to top on component mount
   useEffect(() => {
@@ -199,6 +197,46 @@ const Home: React.FC = () => {
                 <Link to={applyNowTarget} className="btn-program">Apply Now</Link>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="stats">
+        <div className="container">
+          <div className="stats-grid">
+            <div className="stat-card">
+              <h3>5,000+</h3>
+              <p>Students Enrolled</p>
+            </div>
+            <div className="stat-card">
+              <h3>50+</h3>
+              <p>Programs Available</p>
+            </div>
+            <div className="stat-card">
+              <h3>95%</h3>
+              <p>Graduate Employment Rate</p>
+            </div>
+            <div className="stat-card">
+              <h3>20+</h3>
+              <p>Years of Excellence</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="cta">
+        <div className="container">
+          <h2>Ready to Start Your Journey?</h2>
+          <p>Join thousands of students who have transformed their careers at MUST</p>
+          <div className="cta-buttons">
+            <Link to={applyNowTarget} className="btn btn-primary">
+              <i className="fas fa-graduation-cap"></i> Apply Now
+            </Link>
+            <Link to="/contact" className="btn btn-outline">
+              <i className="fas fa-phone"></i> Contact Us
+            </Link>
           </div>
         </div>
       </section>

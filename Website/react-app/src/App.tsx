@@ -10,17 +10,16 @@ import Contact from './pages/Contact/Contact';
 import Programs from './pages/Programs/Programs';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
-import { AuthProvider } from './firebase/AuthContext';
+import { AuthProvider, useAuth } from './firebase/AuthContext';
 import AdminDashboard from './pages/Admin/AdminDashboard';
-import { useUserClaims } from './firebase/useUserClaims';
 import ApplicationForm from './pages/Application/ApplicationForm';
 import LogoutConfirm from './pages/Auth/LogoutConfirm';
 import './App.css';
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
-  const { admin, loading } = useUserClaims();
-  if (loading) return null;
-  return admin ? <>{children}</> : <div style={{padding: 40, textAlign: 'center'}}>Access Denied</div>;
+  const { isAdmin, isReviewer, isLoading } = useAuth();
+  if (isLoading) return null;
+  return (isAdmin() || isReviewer()) ? <>{children}</> : <div style={{padding: 40, textAlign: 'center'}}>Access Denied</div>;
 }
 
 function App() {

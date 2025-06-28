@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { auth } from './config';
+import AuthService, { User } from '../services/AuthService';
 
 interface AuthContextType {
   user: User | null;
@@ -8,6 +7,11 @@ interface AuthContextType {
   isAuthenticated: boolean;
   logout: () => Promise<void>;
   clearSessionHistory: () => void;
+  hasRole: (role: string) => boolean;
+  hasPermission: (permission: string) => boolean;
+  isAdmin: () => boolean;
+  isReviewer: () => boolean;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -16,6 +20,11 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   logout: async () => {},
   clearSessionHistory: () => {},
+  hasRole: () => false,
+  hasPermission: () => false,
+  isAdmin: () => false,
+  isReviewer: () => false,
+  refreshUser: async () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -33,37 +42,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Clear session storage
       sessionStorage.clear();
       // Clear any auth-related localStorage items
-      localStorage.removeItem('currentUser');
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
       localStorage.removeItem('sessionTimestamp');
-      localStorage.removeItem('authToken');
+      localStorage.removeItem('currentUser'); // Legacy compatibility
+      localStorage.removeItem('authToken'); // Legacy compatibility
       // Signal other tabs to logout
       localStorage.setItem('logout-event', Date.now().toString());
       localStorage.removeItem('logout-event');
     }
   };
 
+  // Initialize auth state on component mount
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setIsLoading(false);
-      if (firebaseUser) {
-        // Sync to localStorage for legacy code
-        localStorage.setItem('currentUser', JSON.stringify({
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          name: firebaseUser.displayName || firebaseUser.email,
-          photoURL: firebaseUser.photoURL
-        }));
-        // Set session timestamp
-        localStorage.setItem('sessionTimestamp', Date.now().toString());
-      } else {
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('sessionTimestamp');
-        // Clear any cached authentication data
+    const initializeAuth = async () => {
+      try {
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser && AuthService.isAuthenticated()) {
+          // Try to refresh user data to ensure it's current
+          try {
+            const refreshedUser = await AuthService.refreshUser();
+            setUser(refreshedUser);
+            
+            // Set session timestamp
+            localStorage.setItem('sessionTimestamp', Date.now().toString());
+            
+            // Sync to localStorage for legacy code compatibility
+            localStorage.setItem('currentUser', JSON.stringify({
+              uid: refreshedUser.id.toString(),
+              email: refreshedUser.email,
+              name: refreshedUser.name,
+              photoURL: null
+            }));
+          } catch (error) {
+            console.error('Failed to refresh user data:', error);
+            // If refresh fails, clear auth state
+            await AuthService.logout();
+            setUser(null);
+            clearSessionHistory();
+          }
+        } else {
+          setUser(null);
+          clearSessionHistory();
+        }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        setUser(null);
         clearSessionHistory();
+      } finally {
+        setIsLoading(false);
       }
-    });
-    return () => unsubscribe();
+    };
+
+    initializeAuth();
   }, []);
 
   // Check for session timeout
@@ -123,7 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await signOut(auth);
+      await AuthService.logout();
       setUser(null);
       clearSessionHistory();
       
@@ -132,14 +164,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.location.replace('/');
     } catch (error) {
       console.error('Logout error:', error);
-      // Even if signOut fails, clear local state and redirect
+      // Even if logout fails, clear local state and redirect
       setUser(null);
       clearSessionHistory();
       window.location.replace('/');
     }
   };
 
-  const isAuthenticated = !!user && !isLoading;
+  const hasRole = (role: string): boolean => {
+    return AuthService.hasRole(role);
+  };
+
+  const hasPermission = (permission: string): boolean => {
+    return AuthService.hasPermission(permission);
+  };
+
+  const isAdmin = (): boolean => {
+    return AuthService.isAdmin();
+  };
+
+  const isReviewer = (): boolean => {
+    return AuthService.isReviewer();
+  };
+
+  const refreshUser = async (): Promise<void> => {
+    try {
+      const refreshedUser = await AuthService.refreshUser();
+      setUser(refreshedUser);
+      
+      // Update legacy localStorage for compatibility
+      localStorage.setItem('currentUser', JSON.stringify({
+        uid: refreshedUser.id.toString(),
+        email: refreshedUser.email,
+        name: refreshedUser.name,
+        photoURL: null
+      }));
+    } catch (error) {
+      console.error('Failed to refresh user:', error);
+      throw error;
+    }
+  };
+
+  const isAuthenticated = !!user && !isLoading && AuthService.isAuthenticated();
 
   return (
     <AuthContext.Provider value={{ 
@@ -147,7 +213,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isLoading, 
       isAuthenticated,
       logout,
-      clearSessionHistory
+      clearSessionHistory,
+      hasRole,
+      hasPermission,
+      isAdmin,
+      isReviewer,
+      refreshUser
     }}>
       {children}
     </AuthContext.Provider>

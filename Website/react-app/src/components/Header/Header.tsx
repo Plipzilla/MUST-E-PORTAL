@@ -2,12 +2,10 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useAuth } from '../../firebase/AuthContext';
-import { useUserClaims } from '../../firebase/useUserClaims';
 import logo from '../../MUST images/Universal/logo-white.png';
 
 const Header: React.FC = () => {
-  const { user, isLoading, logout } = useAuth();
-  const { admin, reviewer, loading: claimsLoading } = useUserClaims();
+  const { user, isLoading, logout, isAdmin, isReviewer } = useAuth();
   const navigate = useNavigate();
 
   // Debug function to log active state
@@ -18,7 +16,7 @@ const Header: React.FC = () => {
     return `nav-link ${isActive ? 'active' : ''}`;
   };
 
-  if (isLoading || claimsLoading) {
+  if (isLoading) {
     return (
       <header className="header">
         <div className="container header-container">
@@ -65,7 +63,7 @@ const Header: React.FC = () => {
             </li>
             {user && (
               <>
-                {admin ? (
+                {isAdmin() ? (
                   <li>
                     <NavLink 
                       to="/admin" 
@@ -92,7 +90,7 @@ const Header: React.FC = () => {
                         Dashboard
                       </NavLink>
                     </li>
-                    {reviewer && (
+                    {isReviewer() && (
                       <li>
                         <NavLink 
                           to="/reviewer" 
