@@ -181,23 +181,7 @@
   font-weight: 500;
 }
 
-.checkbox-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  cursor: pointer;
-  font-weight: normal;
-  margin-bottom: 15px;
-  line-height: 1.4;
-}
 
-.checkbox-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #003366;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
 
 /* Declaration Box */
 .declaration-box {
@@ -261,9 +245,7 @@
   box-shadow: 0 2px 4px rgba(0, 51, 102, 0.1);
 }
 
-.checklist-item .checkbox-label {
-  margin-bottom: 0;
-}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -291,7 +273,5 @@
     padding: 20px;
   }
   
-  .checkbox-label {
-    align-items: flex-start;
-  }
+
 } 

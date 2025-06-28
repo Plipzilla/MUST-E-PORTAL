@@ -1,66 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
 interface Application {
   id: string;
   title: string;
   faculty: string;
-  status: 'pending' | 'review' | 'accepted' | 'rejected';
+  status: 'draft' | 'incomplete' | 'submitted' | 'review' | 'accepted' | 'rejected';
   submittedDate: string;
   lastUpdated: string;
   applicationId: string;
+  isDraft?: boolean;
+  completionPercentage?: number;
 }
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [userName, setUserName] = useState('Guest User');
-  const [applications] = useState<Application[]>([
-    {
-      id: '1',
-      title: 'MSc in Computer Science',
-      faculty: 'Faculty of Computing and Information Technology',
-      status: 'accepted',
-      submittedDate: '15 Aug 2023',
-      lastUpdated: '25 Sep 2023',
-      applicationId: 'MUST-APP-2023-00125'
-    },
-    {
-      id: '2',
-      title: 'Postgraduate Diploma in Education',
-      faculty: 'Faculty of Education and Media Studies',
-      status: 'review',
-      submittedDate: '10 Sep 2023',
-      lastUpdated: '18 Sep 2023',
-      applicationId: 'MUST-APP-2023-00189'
-    },
-    {
-      id: '3',
-      title: 'Weekend MBA Program',
-      faculty: 'Faculty of Business and Management Sciences',
-      status: 'pending',
-      submittedDate: '5 Sep 2023',
-      lastUpdated: '12 Sep 2023',
-      applicationId: 'MUST-APP-2023-00215'
-    }
-  ]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
       const user = JSON.parse(currentUser);
       setUserName(user.name || user.email);
     }
+    loadApplications();
   }, []);
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'accepted': return 'Accepted';
+      case 'draft': return 'Draft';
+      case 'incomplete': return 'Action Needed';
+      case 'submitted': return 'Submitted';
       case 'review': return 'In Review';
-      case 'pending': return 'Action Needed';
+      case 'accepted': return 'Accepted';
       case 'rejected': return 'Rejected';
       default: return 'Unknown';
     }
+  };
+
+  const loadApplications = async () => {
+    try {
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) return;
+
+      const user = JSON.parse(currentUser);
+      const userId = user.uid || user.email;
+
+      // Load drafts from localStorage
+      const drafts = JSON.parse(localStorage.getItem('applicationDrafts') || '[]');
+      const userDrafts = drafts.filter((draft: any) => draft.userId === userId);
+
+      // Load submitted applications from localStorage
+      const submitted = JSON.parse(localStorage.getItem('submittedApplications') || '[]');
+      const userSubmitted = submitted.filter((app: any) => app.userId === userId);
+
+      // Combine and format applications
+      const allApplications = [
+        ...userDrafts.map((draft: any) => ({
+          id: draft.id,
+          title: draft.programTitle || 'Application Draft',
+          faculty: draft.faculty || 'Not specified',
+          status: draft.completionPercentage < 100 ? 'incomplete' : 'draft',
+          submittedDate: '',
+          lastUpdated: new Date(draft.lastSaved).toLocaleDateString(),
+          applicationId: `DRAFT-${draft.id}`,
+          isDraft: true,
+          completionPercentage: draft.completionPercentage
+        })),
+        ...userSubmitted.map((app: any) => ({
+          id: app.id,
+          title: app.programTitle,
+          faculty: app.faculty,
+          status: app.status,
+          submittedDate: new Date(app.submittedDate).toLocaleDateString(),
+          lastUpdated: new Date(app.lastUpdated).toLocaleDateString(),
+          applicationId: app.applicationId,
+          isDraft: false
+        }))
+      ];
+
+      setApplications(allApplications);
+      console.log('Applications loaded from localStorage:', allApplications);
+    } catch (error) {
+      console.error('Failed to load applications:', error);
+    }
+  };
+
+  const handleContinueDraft = (applicationId: string) => {
+    // Navigate to application form with draft ID
+    navigate(`/application?draft=${applicationId}`);
   };
 
   return (
@@ -115,7 +146,7 @@ const Dashboard: React.FC = () => {
                 <i className="fas fa-exclamation-circle"></i>
               </div>
               <div className="stat-info">
-                <h3>{applications.filter(app => app.status === 'pending').length}</h3>
+                <h3>{applications.filter(app => app.status === 'incomplete' || app.status === 'draft').length}</h3>
                 <p>Action Needed</p>
               </div>
             </div>
@@ -127,7 +158,9 @@ const Dashboard: React.FC = () => {
               <div className="section-filter">
                 <select className="form-control">
                   <option>All Applications</option>
-                  <option>Pending</option>
+                  <option>Drafts</option>
+                  <option>Incomplete</option>
+                  <option>Submitted</option>
                   <option>In Review</option>
                   <option>Accepted</option>
                   <option>Rejected</option>
@@ -141,6 +174,11 @@ const Dashboard: React.FC = () => {
                   <div className="app-title">{application.title}</div>
                   <div className={`app-status ${application.status}`}>
                     {getStatusText(application.status)}
+                    {application.isDraft && application.completionPercentage !== undefined && (
+                      <span className="completion-percentage">
+                        {Math.round(application.completionPercentage)}% Complete
+                      </span>
+                    )}
                   </div>
                 </div>
                 <p>{application.faculty}</p>
@@ -174,15 +212,23 @@ const Dashboard: React.FC = () => {
                       <i className="fas fa-eye"></i> View Details
                     </button>
                   )}
-                  {application.status === 'pending' && (
+                  {(application.status === 'incomplete' || application.status === 'draft') && (
                     <>
-                      <button className="btn-action">
-                        <i className="fas fa-upload"></i> Upload Documents
+                      <button 
+                        className="btn-action"
+                        onClick={() => handleContinueDraft(application.id)}
+                      >
+                        <i className="fas fa-edit"></i> Continue Application
                       </button>
                       <button className="btn-action">
                         <i className="fas fa-info-circle"></i> Details
                       </button>
                     </>
+                  )}
+                  {application.status === 'submitted' && (
+                    <button className="btn-action">
+                      <i className="fas fa-eye"></i> View Application
+                    </button>
                   )}
                 </div>
               </div>

@@ -7,7 +7,9 @@ import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Contact from './pages/Contact/Contact';
+import Programs from './pages/Programs/Programs';
 import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
 import { AuthProvider } from './firebase/AuthContext';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import { useUserClaims } from './firebase/useUserClaims';
@@ -30,16 +32,24 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } />
+              <Route path="/signup" element={
+                <PublicRoute>
+                  <Signup />
+                </PublicRoute>
+              } />
               <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/application" element={<ApplicationForm />} />
+                <Route path="/logout" element={<LogoutConfirm />} />
               </Route>
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-              <Route path="/application" element={<ApplicationForm />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/programs" element={<div>Programs Page - Coming Soon</div>} />
-              <Route path="/logout" element={<LogoutConfirm />} />
+              <Route path="/programs" element={<Programs />} />
             </Routes>
           </main>
           <Footer />

@@ -167,6 +167,35 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  min-width: 120px;
+  text-align: center;
+}
+
+.completion-percentage {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: none;
+  opacity: 0.9;
+  letter-spacing: normal;
+}
+
+.app-status.draft {
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.app-status.incomplete {
+  background-color: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.app-status.submitted {
+  background-color: var(--info-light);
+  color: var(--info-dark);
 }
 
 .app-status.accepted {
@@ -177,11 +206,6 @@
 .app-status.review {
   background-color: var(--warning-light);
   color: var(--warning-dark);
-}
-
-.app-status.pending {
-  background-color: var(--danger-light);
-  color: var(--danger-dark);
 }
 
 .app-status.rejected {

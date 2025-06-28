@@ -87,23 +87,7 @@
   font-weight: 500;
 }
 
-.checkbox-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  cursor: pointer;
-  font-weight: normal;
-  margin-bottom: 15px;
-  line-height: 1.4;
-}
 
-.checkbox-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #003366;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
 
 .disability-section {
   background: #f8f9fa;
@@ -214,7 +198,5 @@
     padding: 15px;
   }
   
-  .checkbox-label {
-    align-items: flex-start;
-  }
+
 } 

@@ -8,8 +8,8 @@ const LogoutConfirm: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout(navigate);
-    navigate('/login');
+    await logout();
+    // Navigation is handled by the logout function with security measures
   };
 
   const handleCancel = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Contact.css';
 import HeroBar from '../../components/HeroBar/HeroBar';
@@ -10,6 +10,11 @@ import img4 from '../../MUST images/Login/clinic.jpg';
 const sliderImages = [img1, img2, img3, img4];
 
 const Contact: React.FC = () => {
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

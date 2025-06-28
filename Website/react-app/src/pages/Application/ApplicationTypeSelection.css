@@ -1,0 +1,226 @@
+/* Application Type Selection Styles */
+.application-type-container {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: var(--spacing-xl) var(--spacing-sm);
+}
+
+.application-type-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.application-type-header h1 {
+  color: #2c3e50;
+  font-size: var(--font-size-3xl);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.application-type-header p {
+  color: #6c757d;
+  font-size: var(--font-size-lg);
+  margin: 0;
+}
+
+/* Application Type Cards */
+.application-type-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2xl);
+  max-width: 1400px;
+  margin: 0 auto var(--spacing-2xl) auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.application-type-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  min-height: 450px;
+}
+
+.application-type-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-color: #3CB371;
+}
+
+.application-type-card:hover .card-icon {
+  transform: scale(1.1);
+}
+
+.card-icon {
+  font-size: 4rem;
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  transition: transform 0.3s ease;
+}
+
+.application-type-card h2 {
+  color: #2c3e50;
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  text-align: center;
+}
+
+.application-type-card > p {
+  color: #6c757d;
+  font-size: var(--font-size-base);
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.5;
+}
+
+.card-details {
+  margin-bottom: var(--spacing-xl);
+}
+
+.card-details h3 {
+  color: #2c3e50;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.card-details h3:first-child {
+  margin-top: 0;
+}
+
+.card-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.card-details li {
+  color: #6c757d;
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) 0;
+  position: relative;
+  padding-left: var(--spacing-lg);
+  line-height: 1.4;
+}
+
+.card-details li::before {
+  content: "✓";
+  color: #3CB371;
+  font-weight: 600;
+  position: absolute;
+  left: 0;
+  top: var(--spacing-xs);
+}
+
+.application-type-card .btn {
+  width: 100%;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+/* Info Cards */
+.application-type-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.info-card {
+  background: var(--white);
+  border-radius: 8px;
+  padding: var(--spacing-xl);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.info-card h3 {
+  color: #2c3e50;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.info-card p {
+  color: #6c757d;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .application-type-cards {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+  
+  .application-type-info {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .application-type-container {
+    padding: var(--spacing-lg) var(--spacing-xs);
+  }
+  
+  .application-type-cards {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .application-type-header h1 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .application-type-card {
+    padding: var(--spacing-2xl) var(--spacing-xl);
+    min-height: auto;
+  }
+  
+  .card-icon {
+    font-size: 3rem;
+  }
+  
+  .application-type-card h2 {
+    font-size: var(--font-size-xl);
+  }
+  
+  .info-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .application-type-info {
+    padding: 0 var(--spacing-sm);
+  }
+}
+
+@media (max-width: 640px) {
+  .application-type-cards {
+    gap: var(--spacing-lg);
+  }
+  
+  .application-type-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .card-icon {
+    font-size: 2.5rem;
+  }
+  
+  .card-details li {
+    font-size: var(--font-size-xs);
+  }
+} 

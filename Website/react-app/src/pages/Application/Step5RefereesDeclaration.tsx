@@ -234,15 +234,16 @@ const Step5RefereesDeclaration: React.FC = () => {
           </p>
           
           <div className="form-group">
-            <label className="checkbox-label">
+            <div className="checkbox-option">
               <input
                 type="checkbox"
+                id="declarationAgreed"
                 checked={data.step5.declaration.declarationAgreed}
                 onChange={(e) => handleDeclarationChange('declarationAgreed', e.target.checked)}
                 onBlur={() => handleBlur('declarationAgreed')}
               />
-              <span>I agree to the above declaration *</span>
-            </label>
+              <label htmlFor="declarationAgreed">I agree to the above declaration *</label>
+            </div>
             {errors.declarationAgreed && (
               <span className="error-message">{errors.declarationAgreed}</span>
             )}
@@ -279,45 +280,48 @@ const Step5RefereesDeclaration: React.FC = () => {
           
           <div className="checklist-items">
             <div className="checklist-item">
-              <label className="checkbox-label">
+              <div className="checkbox-option">
                 <input
                   type="checkbox"
+                  id="allSectionsCompleted"
                   checked={data.step5.declaration.allSectionsCompleted}
                   onChange={(e) => handleDeclarationChange('allSectionsCompleted', e.target.checked)}
                   onBlur={() => handleBlur('allSectionsCompleted')}
                 />
-                <span>All sections of the application form are completed *</span>
-              </label>
+                <label htmlFor="allSectionsCompleted">All sections of the application form are completed *</label>
+              </div>
               {errors.allSectionsCompleted && (
                 <span className="error-message">{errors.allSectionsCompleted}</span>
               )}
             </div>
 
             <div className="checklist-item">
-              <label className="checkbox-label">
+              <div className="checkbox-option">
                 <input
                   type="checkbox"
+                  id="allDocumentsUploaded"
                   checked={data.step5.declaration.allDocumentsUploaded}
                   onChange={(e) => handleDeclarationChange('allDocumentsUploaded', e.target.checked)}
                   onBlur={() => handleBlur('allDocumentsUploaded')}
                 />
-                <span>All required documents have been uploaded *</span>
-              </label>
+                <label htmlFor="allDocumentsUploaded">All required documents have been uploaded *</label>
+              </div>
               {errors.allDocumentsUploaded && (
                 <span className="error-message">{errors.allDocumentsUploaded}</span>
               )}
             </div>
 
             <div className="checklist-item">
-              <label className="checkbox-label">
+              <div className="checkbox-option">
                 <input
                   type="checkbox"
+                  id="depositSlipAttached"
                   checked={data.step5.declaration.depositSlipAttached}
                   onChange={(e) => handleDeclarationChange('depositSlipAttached', e.target.checked)}
                   onBlur={() => handleBlur('depositSlipAttached')}
                 />
-                <span>Application fee deposit slip has been attached *</span>
-              </label>
+                <label htmlFor="depositSlipAttached">Application fee deposit slip has been attached *</label>
+              </div>
               {errors.depositSlipAttached && (
                 <span className="error-message">{errors.depositSlipAttached}</span>
               )}

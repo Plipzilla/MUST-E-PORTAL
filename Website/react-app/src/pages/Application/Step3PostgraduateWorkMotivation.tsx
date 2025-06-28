@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useApplication } from './ApplicationContext';
-import './Step3WorkMotivation.css';
+import './FormStyles.css';
 
-const Step3WorkMotivation: React.FC = () => {
+const Step3PostgraduateWorkMotivation: React.FC = () => {
   const { data, setData, addWorkExperience, removeWorkExperience } = useApplication();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const motivationFileRef = useRef<HTMLInputElement>(null);
@@ -12,12 +12,12 @@ const Step3WorkMotivation: React.FC = () => {
       case 'motivationEssay':
         if (!value) return 'Motivation essay is required';
         const wordCount = value.split(/\s+/).filter((word: string) => word.length > 0).length;
-        if (wordCount < 300) return `Essay must be at least 300 words (currently ${wordCount})`;
-        if (wordCount > 500) return `Essay must be no more than 500 words (currently ${wordCount})`;
+        if (wordCount < 500) return `Essay must be at least 500 words (currently ${wordCount})`;
+        if (wordCount > 1000) return `Essay must be no more than 1000 words (currently ${wordCount})`;
         return '';
       case 'motivationFile':
         if (data.step3.motivation.uploadMotivationNote && !value) {
-          return 'Please upload your motivation note';
+          return 'Please upload your research concept note';
         }
         return '';
       default:
@@ -107,6 +107,13 @@ const Step3WorkMotivation: React.FC = () => {
     return text.split(/\s+/).filter((word: string) => word.length > 0).length;
   };
 
+  const getWordCountColor = () => {
+    const count = getWordCount();
+    if (count < 500) return '#dc3545'; // Red
+    if (count > 1000) return '#dc3545'; // Red
+    return '#28a745'; // Green
+  };
+
   const renderMotivationFilePreview = () => {
     if (!data.step3.motivation.motivationFile) return null;
 
@@ -124,16 +131,22 @@ const Step3WorkMotivation: React.FC = () => {
   };
 
   return (
-    <div className="step3-container">
-      {/* Section A: Work Experience (Postgraduate Only) */}
+    <div className="form-step">
+      <div className="step-header">
+        <h2>Work Experience & Motivation</h2>
+        <p>Provide your professional experience and detailed motivation for postgraduate study</p>
+      </div>
+
+      {/* Work Experience Section */}
       <div className="form-section">
-        <h3>Section A: Work Experience</h3>
+        <h3>Professional Work Experience</h3>
         <p className="section-description">
-          Please provide details of your work experience. This section is particularly important for postgraduate applications.
+          Please provide details of your relevant work experience. Include all professional positions, 
+          internships, and volunteer work that demonstrates your qualifications for postgraduate study.
         </p>
 
         {data.step3.workExperience.map((experience, index) => (
-          <div key={index} className="work-experience-card">
+          <div key={index} className="experience-card">
             <div className="card-header">
               <h4>Work Experience #{index + 1}</h4>
               {data.step3.workExperience.length > 1 && (
@@ -149,44 +162,50 @@ const Step3WorkMotivation: React.FC = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor={`fromDate-${index}`}>From Date *</label>
+                <label htmlFor={`fromDate-${index}`} className="required">From Date</label>
                 <input
                   type="date"
                   id={`fromDate-${index}`}
                   value={experience.fromDate}
                   onChange={(e) => handleWorkExperienceChange(index, 'fromDate', e.target.value)}
+                  required
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor={`toDate-${index}`}>To Date *</label>
+                <label htmlFor={`toDate-${index}`} className="required">To Date</label>
                 <input
                   type="date"
                   id={`toDate-${index}`}
                   value={experience.toDate}
                   onChange={(e) => handleWorkExperienceChange(index, 'toDate', e.target.value)}
+                  required
                 />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor={`organization-${index}`}>Organization *</label>
+                <label htmlFor={`organization-${index}`} className="required">Organization/Company</label>
                 <input
                   type="text"
                   id={`organization-${index}`}
                   value={experience.organization}
                   onChange={(e) => handleWorkExperienceChange(index, 'organization', e.target.value)}
+                  placeholder="Enter organization name"
+                  required
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor={`position-${index}`}>Position / Nature of Work *</label>
+                <label htmlFor={`position-${index}`} className="required">Position/Job Title</label>
                 <input
                   type="text"
                   id={`position-${index}`}
                   value={experience.position}
                   onChange={(e) => handleWorkExperienceChange(index, 'position', e.target.value)}
+                  placeholder="Enter your job title"
+                  required
                 />
               </div>
             </div>
@@ -195,35 +214,71 @@ const Step3WorkMotivation: React.FC = () => {
 
         <button
           type="button"
-          className="btn-add"
+          className="btn btn-outline"
           onClick={addWorkExperience}
         >
-          + Add Work Experience
+          + Add Another Work Experience
         </button>
       </div>
 
-      {/* Section B: Motivation */}
+      {/* Motivation Statement Section */}
       <div className="form-section">
-        <h3>Section B: Motivation</h3>
-        
+        <h3>Motivation Statement</h3>
+        <p className="section-description">
+          Write a comprehensive motivation statement (500-1000 words) explaining your motivation for postgraduate study. 
+          Include your research interests, career goals, and how this programme aligns with your professional development.
+        </p>
+
         <div className="form-group">
-          <label htmlFor="motivationEssay">Motivation Essay *</label>
-          <div className="essay-container">
+          <label htmlFor="motivationEssay" className="required">
+            Motivation Statement
+          </label>
+          <div className="textarea-container">
             <textarea
               id="motivationEssay"
               value={data.step3.motivation.motivationEssay}
               onChange={(e) => handleMotivationChange('motivationEssay', e.target.value)}
               onBlur={() => handleBlur('motivationEssay')}
-              className={`essay-textarea ${errors.motivationEssay ? 'error' : ''}`}
-              rows={12}
-              placeholder="Please write a motivation essay explaining why you want to study this programme, your career goals, and how this degree will help you achieve them. (300-500 words)"
+              placeholder="Write your detailed motivation statement here. Include your research interests, career goals, how your work experience has prepared you for postgraduate study, and how this programme aligns with your professional development..."
+              rows={15}
+              className={errors.motivationEssay ? 'error' : ''}
+              required
             />
-            <div className="word-count">
-              Word count: <span className={getWordCount() < 300 || getWordCount() > 500 ? 'error' : 'success'}>{getWordCount()}</span> / 500
+            <div className="word-count" style={{ color: getWordCountColor() }}>
+              {getWordCount()}/1000 words
+              {getWordCount() < 500 && (
+                <span className="word-count-note"> (minimum 500 words required)</span>
+              )}
+              {getWordCount() > 1000 && (
+                <span className="word-count-note"> (maximum 1000 words exceeded)</span>
+              )}
             </div>
           </div>
-          {errors.motivationEssay && <span className="error-message">{errors.motivationEssay}</span>}
+          {errors.motivationEssay && (
+            <div className="error-message">{errors.motivationEssay}</div>
+          )}
         </div>
+
+        <div className="motivation-guidelines">
+          <h4>Guidelines for Your Postgraduate Motivation Statement:</h4>
+          <ul>
+            <li><strong>Academic Background:</strong> Detail your undergraduate education and relevant coursework</li>
+            <li><strong>Professional Experience:</strong> Explain how your work experience has prepared you for postgraduate study</li>
+            <li><strong>Research Interests:</strong> Describe specific areas of research that interest you</li>
+            <li><strong>Programme Alignment:</strong> Explain why this specific programme matches your goals</li>
+            <li><strong>Career Objectives:</strong> Outline your long-term career aspirations</li>
+            <li><strong>Research Contribution:</strong> Describe how you plan to contribute to research in your field</li>
+            <li><strong>Professional Impact:</strong> Explain how this qualification will advance your career</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Research Concept Note Section */}
+      <div className="form-section">
+        <h3>Research Concept Note (Optional)</h3>
+        <p className="section-description">
+          For research-based programmes, you may upload a research concept note outlining your proposed research area.
+        </p>
 
         <div className="form-group">
           <div className="checkbox-option">
@@ -233,35 +288,50 @@ const Step3WorkMotivation: React.FC = () => {
               checked={data.step3.motivation.uploadMotivationNote}
               onChange={(e) => handleMotivationChange('uploadMotivationNote', e.target.checked)}
             />
-            <label htmlFor="uploadMotivationNote">Upload additional motivation note (Optional)</label>
+            <label htmlFor="uploadMotivationNote">
+              I want to upload a research concept note
+            </label>
           </div>
         </div>
 
         {data.step3.motivation.uploadMotivationNote && (
           <div className="form-group">
-            <label htmlFor="motivationFile">Upload Motivation Note</label>
-            <input
-              ref={motivationFileRef}
-              type="file"
-              id="motivationFile"
-              accept=".pdf,.docx"
-              onChange={handleMotivationFileUpload}
-              className="file-input"
-            />
-            <button
-              type="button"
-              className="btn-upload"
-              onClick={() => motivationFileRef.current?.click()}
-            >
-              Choose File (PDF/DOCX, max 5MB)
-            </button>
-            {errors.motivationFile && <span className="error-message">{errors.motivationFile}</span>}
+            <label htmlFor="motivationFile" className="required">
+              Research Concept Note
+            </label>
+            <div className="file-upload-area">
+              <input
+                type="file"
+                id="motivationFile"
+                ref={motivationFileRef}
+                onChange={handleMotivationFileUpload}
+                onBlur={() => handleBlur('motivationFile')}
+                accept=".pdf,.docx"
+                className="file-input"
+                required={data.step3.motivation.uploadMotivationNote}
+              />
+              <div className="file-upload-content">
+                <div className="upload-icon">📎</div>
+                <div className="upload-text">
+                  <p>Click to upload your research concept note</p>
+                  <p className="upload-hint">PDF or DOCX format, max 5MB</p>
+                </div>
+              </div>
+            </div>
             {renderMotivationFilePreview()}
+            {errors.motivationFile && (
+              <div className="error-message">{errors.motivationFile}</div>
+            )}
           </div>
         )}
+      </div>
+
+      <div className="form-note">
+        <p><strong>Important:</strong> Your motivation statement and work experience details are crucial for postgraduate applications. 
+        Ensure all information is accurate and demonstrates your readiness for advanced study.</p>
       </div>
     </div>
   );
 };
 
-export default Step3WorkMotivation; 
+export default Step3PostgraduateWorkMotivation; 

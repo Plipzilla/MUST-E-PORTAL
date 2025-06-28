@@ -1,21 +1,27 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
+// Application Type
+export type ApplicationType = 'undergraduate' | 'postgraduate' | '';
+
 // Step 1: Personal & Contact Details
 export interface PersonalInfo {
-  // Section A: Identity
+  // Application Type Selection
+  applicationType: ApplicationType;
+  
+  // Section A: Identity (Official MUST fields)
   title: string;
-  firstName: string;
   surname: string;
-  nationality: string;
-  countryOfResidence: string;
+  firstName: string;
   maritalStatus: string;
   maidenName: string;
   dateOfBirth: string;
   placeOfBirth: string;
+  nationality: string;
+  countryOfResidence: string;
   gender: string;
   passportPhoto: File | null;
   
-  // Section B: Contact Info
+  // Section B: Contact Information (Official MUST fields)
   correspondenceAddress: string;
   telephoneNumbers: string;
   emailAddress: string;
@@ -112,15 +118,16 @@ export interface ApplicationData {
 }
 
 const defaultPersonalInfo: PersonalInfo = {
+  applicationType: '',
   title: '',
-  firstName: '',
   surname: '',
-  nationality: '',
-  countryOfResidence: '',
+  firstName: '',
   maritalStatus: '',
   maidenName: '',
   dateOfBirth: '',
   placeOfBirth: '',
+  nationality: '',
+  countryOfResidence: '',
   gender: '',
   passportPhoto: null,
   correspondenceAddress: '',
@@ -210,6 +217,10 @@ interface ApplicationContextType {
   removeWorkExperience: (index: number) => void;
   addReferee: () => void;
   removeReferee: (index: number) => void;
+  getApplicationType: () => ApplicationType;
+  getTotalSteps: () => number;
+  getStepTitle: (step: number) => string;
+  isStepAvailable: (step: number) => boolean;
 }
 
 const ApplicationContext = createContext<ApplicationContextType | undefined>(undefined);
@@ -217,30 +228,77 @@ const ApplicationContext = createContext<ApplicationContextType | undefined>(und
 export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<ApplicationData>(defaultData);
 
+  const getFacultyFromProgram = (programName: string): string => {
+    if (!programName) return 'Not specified';
+    if (programName.includes('Computer Science') || programName.includes('Information Technology')) {
+      return 'Malawi Institute of Technology';
+    } else if (programName.includes('Environmental') || programName.includes('Climate') || programName.includes('Earth')) {
+      return 'Ndata School of Climate and Earth Sciences';
+    } else if (programName.includes('Cultural') || programName.includes('Heritage')) {
+      return 'Bingu School of Culture and Heritage';
+    } else if (programName.includes('Medicine') || programName.includes('Medical') || programName.includes('Biomedical')) {
+      return 'Academy of Medical Sciences';
+    }
+    return 'Not specified';
+  };
+
   // Save draft function
   const saveDraft = useCallback(async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) return;
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) return;
 
-      const response = await fetch('/api/application/save-draft', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...data,
-          lastSaved: new Date().toISOString(),
-        }),
-      });
+      const user = JSON.parse(currentUser);
+      const userId = user.uid || user.email;
 
-      if (response.ok) {
-        setData(prev => ({
-          ...prev,
-          lastSaved: new Date().toISOString(),
-        }));
+      // Calculate completion percentage based on filled fields
+      let completionPercentage = 0;
+      
+      // Basic completion based on application type and step progress
+      if (data.step1.applicationType) {
+        completionPercentage += 20; // Application type selected
       }
+      if (data.step1.firstName && data.step1.surname && data.step1.emailAddress) {
+        completionPercentage += 20; // Basic personal info
+      }
+      if (data.step2.programInfo.firstChoice) {
+        completionPercentage += 20; // Program selected
+      }
+      if (data.step1.applicationType === 'postgraduate' && data.step3.motivation.motivationEssay) {
+        completionPercentage += 20; // Motivation (postgraduate only)
+      }
+      if (data.step5.referees.some(ref => ref.name && ref.email)) {
+        completionPercentage += 20; // At least one referee
+      }
+      
+      const draftData = {
+        id: `draft_${userId}_${Date.now()}`,
+        userId: userId,
+        ...data,
+        programTitle: data.step2.programInfo.firstChoice || 'Application Draft',
+        faculty: getFacultyFromProgram(data.step2.programInfo.firstChoice),
+        completionPercentage,
+        lastSaved: new Date().toISOString(),
+        isDraft: true
+      };
+
+      // Save to localStorage
+      const existingDrafts = JSON.parse(localStorage.getItem('applicationDrafts') || '[]');
+      
+      // Remove any existing draft for this user (only keep one draft per user)
+      const filteredDrafts = existingDrafts.filter((draft: any) => draft.userId !== userId);
+      
+      // Add the new draft
+      filteredDrafts.push(draftData);
+      
+      localStorage.setItem('applicationDrafts', JSON.stringify(filteredDrafts));
+
+      setData(prev => ({
+        ...prev,
+        lastSaved: new Date().toISOString(),
+      }));
+
+      console.log('Draft saved successfully to localStorage');
     } catch (error) {
       console.error('Failed to save draft:', error);
     }
@@ -258,18 +316,31 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   // Load draft function
   const loadDraft = useCallback(async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) return;
+      const currentUser = localStorage.getItem('currentUser');
+      if (!currentUser) return;
 
-      const response = await fetch('/api/application/load-draft', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const user = JSON.parse(currentUser);
+      const userId = user.uid || user.email;
 
-      if (response.ok) {
-        const savedData = await response.json();
-        setData(savedData);
+      // Check if there's a specific draft ID in URL params
+      const urlParams = new URLSearchParams(window.location.search);
+      const draftId = urlParams.get('draft');
+      
+      const existingDrafts = JSON.parse(localStorage.getItem('applicationDrafts') || '[]');
+      
+      let draftToLoad = null;
+      
+      if (draftId) {
+        // Load specific draft by ID
+        draftToLoad = existingDrafts.find((draft: any) => draft.id === draftId);
+      } else {
+        // Load the user's most recent draft
+        draftToLoad = existingDrafts.find((draft: any) => draft.userId === userId);
+      }
+
+      if (draftToLoad) {
+        setData(draftToLoad);
+        console.log('Draft loaded successfully from localStorage');
       }
     } catch (error) {
       console.error('Failed to load draft:', error);
@@ -285,16 +356,17 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   // Validation functions
   const isStepValid = useCallback((step: number): boolean => {
     switch (step) {
-      case 0: // Personal & Contact Details
+      case 1: // Personal & Contact Details
         const { step1 } = data;
         return !!(
           step1.title &&
-          step1.firstName &&
           step1.surname &&
-          step1.nationality &&
-          step1.countryOfResidence &&
+          step1.firstName &&
+          step1.maritalStatus &&
           step1.dateOfBirth &&
           step1.placeOfBirth &&
+          step1.nationality &&
+          step1.countryOfResidence &&
           step1.gender &&
           step1.passportPhoto &&
           step1.correspondenceAddress &&
@@ -302,7 +374,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
           step1.emailAddress
         );
       
-      case 1: // Programme & Education History
+      case 2: // Programme & Education History
         const { step2 } = data;
         return !!(
           step2.programInfo.levelOfStudy &&
@@ -325,19 +397,45 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
             step2.educationHistory.classOfAward))
         );
       
-      case 2: // Work Experience & Motivation
-        const { step3 } = data;
-        return !!(
-          step3.motivation.motivationEssay &&
-          step3.motivation.motivationEssay.split(' ').length >= 300 &&
-          step3.motivation.motivationEssay.split(' ').length <= 500
-        );
+      case 3: 
+        const applicationType = data.step1.applicationType;
+        if (applicationType === 'undergraduate') {
+          // Step 3 for undergraduate is Special Needs
+          const { step4 } = data;
+          return !step4.hasDisability || !!step4.disabilityDescription;
+        } else {
+          // Step 3 for postgraduate is Work Experience & Motivation
+          const { step3 } = data;
+          return !!(
+            step3.motivation.motivationEssay &&
+            step3.motivation.motivationEssay.split(' ').length >= 500 &&
+            step3.motivation.motivationEssay.split(' ').length <= 1000
+          );
+        }
       
-      case 3: // Special Needs
-        const { step4 } = data;
-        return !step4.hasDisability || !!step4.disabilityDescription;
+      case 4: 
+        const appType = data.step1.applicationType;
+        if (appType === 'undergraduate') {
+          // Step 4 for undergraduate is Referees & Declaration
+          const { step5 } = data;
+          const validReferees = step5.referees.filter(ref => 
+            ref.name && ref.position && ref.institution && ref.address && ref.email
+          );
+          return !!(
+            validReferees.length >= 2 &&
+            step5.declaration.declarationAgreed &&
+            step5.declaration.fullName &&
+            step5.declaration.allSectionsCompleted &&
+            step5.declaration.allDocumentsUploaded &&
+            step5.declaration.depositSlipAttached
+          );
+        } else {
+          // Step 4 for postgraduate is Special Needs
+          const { step4 } = data;
+          return !step4.hasDisability || !!step4.disabilityDescription;
+        }
       
-      case 4: // Referees & Declaration
+      case 5: // Referees & Declaration (postgraduate only)
         const { step5 } = data;
         const validReferees = step5.referees.filter(ref => 
           ref.name && ref.position && ref.institution && ref.address && ref.email
@@ -417,6 +515,49 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [data.step5.referees.length]);
 
+  // Get application type
+  const getApplicationType = useCallback((): ApplicationType => {
+    return data.step1.applicationType;
+  }, [data.step1.applicationType]);
+
+  // Get total steps based on application type
+  const getTotalSteps = useCallback((): number => {
+    const applicationType = data.step1.applicationType;
+    return applicationType === 'undergraduate' ? 4 : 5; // Undergraduate: 4 steps, Postgraduate: 5 steps
+  }, [data.step1.applicationType]);
+
+  // Get step title based on application type
+  const getStepTitle = useCallback((step: number): string => {
+    const applicationType = getApplicationType();
+    
+    if (applicationType === 'undergraduate') {
+      const undergraduateStepTitles = {
+        1: 'Personal Information',
+        2: 'Programme & Secondary Education',
+        3: 'Special Needs & Requirements',
+        4: 'Referees & Declaration'
+      };
+      return undergraduateStepTitles[step as keyof typeof undergraduateStepTitles] || 'Unknown Step';
+    } else {
+      const postgraduateStepTitles = {
+        1: 'Personal Information',
+        2: 'Programme & University Education',
+        3: 'Work Experience & Motivation',
+        4: 'Special Needs & Requirements',
+        5: 'Referees & Declaration'
+      };
+      return postgraduateStepTitles[step as keyof typeof postgraduateStepTitles] || 'Unknown Step';
+    }
+  }, [getApplicationType]);
+
+  // Check if step is available based on application type
+  const isStepAvailable = useCallback((step: number): boolean => {
+    const applicationType = getApplicationType();
+    
+    // Step 1 and above only available after application type is selected
+    return applicationType !== '';
+  }, [getApplicationType]);
+
   return (
     <ApplicationContext.Provider value={{
       data,
@@ -430,6 +571,10 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       removeWorkExperience,
       addReferee,
       removeReferee,
+      getApplicationType,
+      getTotalSteps,
+      getStepTitle,
+      isStepAvailable,
     }}>
       {children}
     </ApplicationContext.Provider>

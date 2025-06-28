@@ -51,7 +51,7 @@
 }
 
 .header-logo {
-  height: 36px;
+  height: 52px;
   width: auto;
   margin-right: 12px;
   vertical-align: middle;
@@ -264,7 +264,11 @@ nav li {
   }
   
   .logo h1 {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
+  }
+  
+  .header-logo {
+    height: 46px;
   }
   
   nav {
@@ -304,6 +308,10 @@ nav li {
 @media (max-width: 640px) {
   .header-container {
     padding: 0 var(--spacing-sm);
+  }
+  
+  .header-logo {
+    height: 41px;
   }
   
   nav ul {

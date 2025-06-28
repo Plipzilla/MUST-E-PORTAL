@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase/config';
@@ -28,6 +28,11 @@ const getSignupFriendlyError = (error: any, context: 'form' | 'google' | 'facebo
 };
 
 const Signup: React.FC = () => {
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,6 +64,9 @@ const Signup: React.FC = () => {
         displayName: name
       });
       
+      // Clear any previous session data
+      sessionStorage.clear();
+      
       // Store user info in localStorage
       localStorage.setItem('currentUser', JSON.stringify({
         uid: user.uid,
@@ -68,11 +76,11 @@ const Signup: React.FC = () => {
 
       // Check for admin claim
       const tokenResult = await user.getIdTokenResult();
-      if (tokenResult.claims.admin) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      const redirectPath = tokenResult.claims.admin ? '/admin' : '/dashboard';
+      
+      // Prevent back button access to signup page
+      window.history.replaceState(null, '', redirectPath);
+      navigate(redirectPath, { replace: true });
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'form'));
     } finally {
@@ -90,18 +98,23 @@ const Signup: React.FC = () => {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      
+      // Clear any previous session data
+      sessionStorage.clear();
+      
       // Store user info in localStorage
       localStorage.setItem('currentUser', JSON.stringify({
         uid: user.uid,
         email: user.email,
         name: user.displayName || user.email
       }));
+      
       const tokenResult = await user.getIdTokenResult();
-      if (tokenResult.claims.admin) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      const redirectPath = tokenResult.claims.admin ? '/admin' : '/dashboard';
+      
+      // Prevent back button access to signup page
+      window.history.replaceState(null, '', redirectPath);
+      navigate(redirectPath, { replace: true });
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'google'));
     } finally {
@@ -119,18 +132,23 @@ const Signup: React.FC = () => {
       const provider = new FacebookAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      
+      // Clear any previous session data
+      sessionStorage.clear();
+      
       // Store user info in localStorage
       localStorage.setItem('currentUser', JSON.stringify({
         uid: user.uid,
         email: user.email,
         name: user.displayName || user.email
       }));
+      
       const tokenResult = await user.getIdTokenResult();
-      if (tokenResult.claims.admin) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      const redirectPath = tokenResult.claims.admin ? '/admin' : '/dashboard';
+      
+      // Prevent back button access to signup page
+      window.history.replaceState(null, '', redirectPath);
+      navigate(redirectPath, { replace: true });
     } catch (error: any) {
       setError(getSignupFriendlyError(error, 'facebook'));
     } finally {

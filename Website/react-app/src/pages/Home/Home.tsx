@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import { useAuth } from '../../firebase/AuthContext';
@@ -15,6 +15,11 @@ const Home: React.FC = () => {
   const { admin, reviewer } = useUserClaims();
   const applyNowTarget = user && !admin && !reviewer ? '/application' : '/signup';
 
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Slider state
   const [current, setCurrent] = useState(0);
   useEffect(() => {
@@ -23,8 +28,6 @@ const Home: React.FC = () => {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-
-  const goToSlide = (idx: number) => setCurrent(idx);
 
   return (
     <main className="page-content">
@@ -42,16 +45,6 @@ const Home: React.FC = () => {
               <i className="fas fa-user-graduate"></i> Check Admission Status
             </Link>
           </div>
-        </div>
-        <div className="hero-dots">
-          {sliderImages.map((_, idx) => (
-            <button
-              key={idx}
-              className={`hero-dot${idx === current ? ' active' : ''}`}
-              onClick={() => goToSlide(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
         </div>
       </section>
 

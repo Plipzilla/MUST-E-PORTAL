@@ -55,14 +55,17 @@ const Step4SpecialNeeds: React.FC = () => {
         </p>
 
         <div className="form-group">
-          <label className="checkbox-label">
+          <div className="checkbox-option">
             <input
               type="checkbox"
+              id="hasDisability"
               checked={data.step4.hasDisability}
               onChange={(e) => handleChange('hasDisability', e.target.checked)}
             />
-            <span>Do you have a disability or condition that may require special support?</span>
-          </label>
+            <label htmlFor="hasDisability">
+              Do you have a disability or condition that may require special support?
+            </label>
+          </div>
         </div>
 
         {data.step4.hasDisability && (
