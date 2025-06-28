@@ -106,6 +106,36 @@ This style guide ensures consistent design, spacing, and typography across all p
 --transition-slow: all 0.5s ease;
 ```
 
+### Mobile Scaling Variables
+```css
+/* Breakpoints */
+--breakpoint-xs: 480px;
+--breakpoint-sm: 640px;
+--breakpoint-md: 768px;
+--breakpoint-lg: 1024px;
+--breakpoint-xl: 1280px;
+--breakpoint-2xl: 1536px;
+
+/* Mobile Spacing */
+--mobile-spacing-xs: 0.125rem;
+--mobile-spacing-sm: 0.25rem;
+--mobile-spacing-md: 0.5rem;
+--mobile-spacing-lg: 0.75rem;
+--mobile-spacing-xl: 1rem;
+--mobile-spacing-2xl: 1.5rem;
+--mobile-spacing-3xl: 2rem;
+
+/* Mobile Typography */
+--mobile-font-xs: 0.625rem;
+--mobile-font-sm: 0.75rem;
+--mobile-font-base: 0.875rem;
+--mobile-font-lg: 1rem;
+--mobile-font-xl: 1.125rem;
+--mobile-font-2xl: 1.25rem;
+--mobile-font-3xl: 1.5rem;
+--mobile-font-4xl: 1.875rem;
+```
+
 ## Component Guidelines
 
 ### Buttons
@@ -198,6 +228,234 @@ This style guide ensures consistent design, spacing, and typography across all p
 .card {
   background: var(--white);
   border-radius: var(--radius-md);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-200);
+  transition: var(--transition);
+}
+
+/* Card responsive scaling */
+@media (max-width: 1023px) {
+  .card {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 767px) {
+  .card {
+    padding: var(--mobile-spacing-xl);
+    margin-bottom: var(--mobile-spacing-lg);
+  }
+}
+
+@media (max-width: 479px) {
+  .card {
+    padding: var(--mobile-spacing-lg);
+    border-radius: var(--radius-sm);
+  }
+}
+```
+
+## Mobile Scaling Rules
+
+### Breakpoint System
+The application uses a 6-tier breakpoint system for optimal responsive design:
+
+```css
+/* Mobile Extra Small: 0-479px */
+@media (max-width: 479px) { /* Ultra-compact mobile */ }
+
+/* Mobile Small: 480-639px */
+@media (max-width: 639px) and (min-width: 480px) { /* Small mobile */ }
+
+/* Mobile Large: 640-767px */
+@media (max-width: 767px) and (min-width: 640px) { /* Large mobile */ }
+
+/* Tablet: 768-1023px */
+@media (max-width: 1023px) and (min-width: 768px) { /* Tablet */ }
+
+/* Desktop: 1024-1279px */
+@media (max-width: 1279px) and (min-width: 1024px) { /* Desktop */ }
+
+/* Large Desktop: 1280px+ */
+@media (min-width: 1280px) { /* Large desktop */ }
+```
+
+### Typography Scaling
+```css
+/* Desktop Typography */
+h1 { font-size: var(--font-size-4xl); }  /* 36px */
+h2 { font-size: var(--font-size-3xl); }  /* 30px */
+h3 { font-size: var(--font-size-2xl); }  /* 24px */
+
+/* Tablet Typography */
+@media (max-width: 1023px) {
+  h1 { font-size: var(--font-size-3xl); }  /* 30px */
+  h2 { font-size: var(--font-size-2xl); }  /* 24px */
+  h3 { font-size: var(--font-size-xl); }   /* 20px */
+}
+
+/* Mobile Typography */
+@media (max-width: 767px) {
+  h1 { font-size: var(--mobile-font-4xl); }  /* 30px */
+  h2 { font-size: var(--mobile-font-3xl); }  /* 24px */
+  h3 { font-size: var(--mobile-font-2xl); }  /* 20px */
+  h4 { font-size: var(--mobile-font-xl); }   /* 18px */
+  h5 { font-size: var(--mobile-font-lg); }   /* 16px */
+  h6 { font-size: var(--mobile-font-base); } /* 14px */
+}
+
+/* Mobile Extra Small Typography */
+@media (max-width: 479px) {
+  body { font-size: var(--mobile-font-base); } /* 14px */
+  h1 { font-size: var(--mobile-font-3xl); }    /* 24px */
+  h2 { font-size: var(--mobile-font-2xl); }    /* 20px */
+  h3 { font-size: var(--mobile-font-xl); }     /* 18px */
+  h4 { font-size: var(--mobile-font-lg); }     /* 16px */
+  h5 { font-size: var(--mobile-font-base); }   /* 14px */
+  h6 { font-size: var(--mobile-font-sm); }     /* 12px */
+}
+```
+
+### Touch Target Guidelines
+All interactive elements must meet minimum touch target requirements:
+
+```css
+/* Standard touch targets */
+.btn, .form-input, .clickable {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Compact touch targets for dense layouts */
+@media (max-width: 479px) {
+  .btn {
+    min-height: 40px;
+  }
+  
+  .btn-sm {
+    min-height: 32px;
+  }
+}
+```
+
+### Container Scaling
+```css
+/* Container responsive padding */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Large Desktop */
+@media (min-width: 1280px) {
+  .container { padding: 0 var(--spacing-xl); }
+}
+
+/* Desktop */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .container { padding: 0 var(--spacing-lg); }
+}
+
+/* Tablet */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .container { padding: 0 var(--spacing-md); }
+}
+
+/* Mobile Large */
+@media (max-width: 767px) and (min-width: 640px) {
+  .container { padding: 0 var(--mobile-spacing-xl); }
+}
+
+/* Mobile Small */
+@media (max-width: 639px) and (min-width: 480px) {
+  .container { padding: 0 var(--mobile-spacing-lg); }
+}
+
+/* Mobile Extra Small */
+@media (max-width: 479px) {
+  .container { padding: 0 var(--mobile-spacing-md); }
+}
+```
+
+### Grid System Scaling
+```css
+/* Desktop: 4 columns */
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Laptop: 3 columns */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .grid-cols-4 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Tablet: 2 columns */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .grid-cols-3,
+  .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Mobile: 1 column */
+@media (max-width: 767px) {
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 { grid-template-columns: 1fr; }
+}
+```
+
+### Mobile-First Development Rules
+
+#### 1. Always start with mobile styles
+```css
+/* ✅ Correct: Mobile-first approach */
+.component {
+  font-size: var(--mobile-font-base);
+  padding: var(--mobile-spacing-md);
+}
+
+@media (min-width: 768px) {
+  .component {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-md);
+  }
+}
+```
+
+#### 2. Use relative units
+```css
+/* ✅ Preferred */
+.component {
+  width: 100%;
+  max-width: 400px;
+  margin: var(--spacing-lg);
+}
+
+/* ❌ Avoid */
+.component {
+  width: 400px;
+  margin: 24px;
+}
+```
+
+#### 3. Implement proper touch optimization
+```css
+/* ✅ Required for all interactive elements */
+.interactive {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+}
+```
+
+#### 4. Handle text overflow
+```css
+/* ✅ Prevent text overflow issues */
+.text-content {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
   box-shadow: var(--shadow);
   padding: var(--spacing-xl);
   margin-bottom: var(--spacing-lg);

@@ -18,8 +18,6 @@ const HeroBar: React.FC<HeroBarProps> = ({ title, subtitle, images }) => {
     return () => clearInterval(interval);
   }, [images]);
 
-  const goToSlide = (idx: number) => setCurrent(idx);
-
   return (
     <div
       className="hero-bar"
@@ -30,18 +28,6 @@ const HeroBar: React.FC<HeroBarProps> = ({ title, subtitle, images }) => {
         <h1>{title}</h1>
         {subtitle && <p>{subtitle}</p>}
       </div>
-      {images && images.length > 1 && (
-        <div className="hero-bar-dots">
-          {images.map((_, idx) => (
-            <button
-              key={idx}
-              className={`hero-bar-dot${idx === current ? ' active' : ''}`}
-              onClick={() => goToSlide(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 };
