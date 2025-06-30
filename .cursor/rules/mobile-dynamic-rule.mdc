@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+This rule is to helop cursor ai agent make sure that the front end is dynamically fittig for all device screeen sizes.
+
+
+Cursor please endsure that every front end change has an applied dynamic feature to ensure the ui looks just as good on smaller or a larger screen sizes.
